@@ -1,7 +1,7 @@
-import { HomePage } from "./pages";
+import MainLayout from "./layouts/MainLayout";
 
 export default function App() {
   return (
-    <HomePage />
+    <MainLayout outputs={null}/>
   )
 }
