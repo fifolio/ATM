@@ -1,9 +1,12 @@
 import { useEffect, useRef } from "react";
 import { Footer, Header, Input } from "../components";
-import { useHistory } from "../stores";
+import { useHistory, useUser } from "../stores";
 
 
 export default function MainLayout() {
+
+  const { isLoggedin } = useUser();
+
 
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
@@ -33,7 +36,7 @@ export default function MainLayout() {
             <div key={index}>
               <div key={record.id || index} className="border-b border-gray-700 pb-2">
                 <p className="text-green-400">
-                  <span className="font-bold">({record.timestamp}):</span> {record.prompt.text}
+                  <span className="font-bold">({record.timestamp}):</span> <span className="text-green-200">{record.prompt.text}</span>
                 </p>
                 {record.response.map((res) => (
                   <div key={index++} className="text-blue-200">
@@ -47,13 +50,17 @@ export default function MainLayout() {
                 ))}
               </div>
 
-              <div ref={bottomRef} />
+              {isLoggedin && (
+                <>
+                  <div ref={bottomRef} />
 
-
-              {/* Display the user basic infos */}
-              {record.user && (
-                <p key={index++} className="text-orange-200 mt-2">{record.date} • {record.user.email} • Number of requests used: ({record.user.RPU}/{record.user.MRPU})</p>
+                  {/* Display the user basic infos */}
+                  {record.user && (
+                    <p key={index++} className="text-orange-200 mt-2">{record.date} • {record.user.email} • Number of requests used: ({record.user.RPU}/{record.user.MRPU})</p>
+                  )}
+                </>
               )}
+
             </div>
           ))}
 

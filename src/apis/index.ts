@@ -1,0 +1,1 @@
+export { default as checkSession } from './backend/auth/checkSession';
