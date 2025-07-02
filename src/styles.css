@@ -4,3 +4,17 @@
     font-family: 'monospace';
     font-size: 14px;
 }
+
+.hide-scrollbar {
+    overflow: auto;
+    /* or scroll */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge (Legacy) */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Opera */
+}

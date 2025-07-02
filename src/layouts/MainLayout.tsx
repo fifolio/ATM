@@ -1,28 +1,70 @@
-import { useRef, type ReactNode } from "react"
+import { useEffect, useRef } from "react";
 import { Footer, Header, Input } from "../components";
+import { useHistory } from "../stores";
 
-type Props = {
-  outputs: ReactNode;
-}
 
-export default function MainLayout({ outputs }: Props) {
+export default function MainLayout() {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
+  const { history } = useHistory();
 
+  // Scroll to bottom whenever `history` changes
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [history]);
 
   return (
     <div
       ref={terminalRef}
-      className="flex flex-col justify-between space-y-1 bg-black text-white h-screen w-screen p-4"
+      className="flex flex-col justify-between space-y-1 bg-black text-white h-screen w-screen p-3 font-mono"
       onClick={() => inputRef.current?.focus()}>
-      <div className="flex flex-col w-full">
-        <Header />
-        {outputs}
-        <Input ref={inputRef} />
+      <div className="flex flex-col w-full overflow-auto flex-grow">
+
+        {/* Display history entries */}
+        <div className="mt-1 space-y-2 hide-scrollbar mb-8">
+
+          {/* Welcome header context */}
+          <Header />
+
+          {history.map((record, index) => (
+            <div key={index}>
+              <div key={record.id || index} className="border-b border-gray-700 pb-2">
+                <p className="text-green-400">
+                  <span className="font-bold">({record.timestamp}):</span> {record.prompt.text}
+                </p>
+                {record.response.map((res) => (
+                  <div key={index++} className="text-blue-200">
+                    <div>
+                      <span className="font-bold">➜({res.timestamp}):</span>
+                      <pre className="-mt-5 ml-2">
+                        {res.content}
+                      </pre>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div ref={bottomRef} />
+
+
+              {/* Display the user basic infos */}
+              {record.user && (
+                <p key={index++} className="text-orange-200 mt-2">{record.date} • {record.user.email} • Number of requests used: ({record.user.RPU}/{record.user.MRPU})</p>
+              )}
+            </div>
+          ))}
+
+        </div>
+
       </div>
+
+      {/* Prompts input */}
+      <Input ref={inputRef} />
+
       <Footer />
     </div>
-  )
+  );
 }
