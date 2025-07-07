@@ -83,7 +83,7 @@ export default function MainLayout() {
         ) : (
           //  Signup input
           <>
-            <SignupInput ref={inputRef}/>
+            <SignupInput />
             <SignupFooter />
           </>
         )
