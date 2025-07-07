@@ -1,12 +1,13 @@
 import { useEffect, useRef } from "react";
-import { Footer, Header, Input } from "../components";
-import { useHistory, useUser } from "../stores";
+import { AccountReadyMsg, Footer, Header, Input, SignupInput, SignupStepsInfo } from "../components";
+import { useHistory, useSignup, useUser } from "../stores";
+import SignupFooter from "../components/Terminal/signup/SignupFooter";
 
 
 export default function MainLayout() {
 
   const { isLoggedin } = useUser();
-
+  const { signupStep } = useSignup();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
@@ -17,12 +18,12 @@ export default function MainLayout() {
   // Scroll to bottom whenever `history` changes
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [history]);
+  }, [history, signupStep]);
 
   return (
     <div
       ref={terminalRef}
-      className="flex flex-col justify-between space-y-1 bg-black text-white h-screen w-screen p-3 font-mono"
+      className="flex flex-col justify-between space-y-1 bg-black text-white h-screen w-screen px-1 font-mono"
       onClick={() => inputRef.current?.focus()}>
       <div className="flex flex-col w-full overflow-auto flex-grow">
 
@@ -32,46 +33,62 @@ export default function MainLayout() {
           {/* Welcome header context */}
           <Header />
 
-          {history.map((record, index) => (
-            <div key={index}>
-              <div key={record.id || index} className="border-b border-gray-700 pb-2">
-                <p className="text-green-400">
-                  <span className="font-bold">({record.timestamp}):</span> <span className="text-green-200">{record.prompt.text}</span>
-                </p>
-                {record.response.map((res) => (
-                  <div key={index++} className="text-blue-200">
-                    <div>
-                      <span className="font-bold">➜({res.timestamp}):</span>
-                      <pre className="-mt-5 ml-2">
-                        {res.content}
-                      </pre>
+          {
+            signupStep !== null && signupStep > 0 && signupStep <= 6 ? (
+              <SignupStepsInfo />
+            ) : signupStep === 7 ? (
+              <AccountReadyMsg />
+            ) : (
+              history.map((record, recordIndex) => (
+                <div key={record.id ?? recordIndex} className="border-b border-gray-700 pb-2">
+                  <p className="text-green-400">
+                    <span className="font-bold">({record.timestamp}):</span>{" "}
+                    <span className="text-green-200">{record.prompt.text}</span>
+                  </p>
+                  {record.response.map((res, resIndex) => (
+                    <div key={resIndex} className="text-white ml-4">
+                      <div>
+                        <span className="font-bold">➜({res.timestamp}):</span>
+                        <pre className="-mt-5 ml-2 whitespace-pre-wrap">{res.content}</pre>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
 
-              {isLoggedin && (
-                <>
-                  <div ref={bottomRef} />
-
-                  {/* Display the user basic infos */}
-                  {record.user && (
-                    <p key={index++} className="text-orange-200 mt-2">{record.date} • {record.user.email} • Number of requests used: ({record.user.RPU}/{record.user.MRPU})</p>
+                  {isLoggedin && (
+                    <>
+                      {/* Display the user basic infos */}
+                      {record.user && (
+                        <p key={recordIndex++} className="text-orange-200 mt-2">{record.date} • {record.user.email} • Number of requests used: ({record.user.RPU}/{record.user.MRPU})</p>
+                      )}
+                    </>
                   )}
-                </>
-              )}
 
-            </div>
-          ))}
+                </div>
+              ))
+            )}
 
+          <div ref={bottomRef} />
         </div>
 
       </div>
 
-      {/* Prompts input */}
-      <Input ref={inputRef} />
 
-      <Footer />
-    </div>
+      {
+        signupStep === null ? (
+          // Prompts input + Footer
+          <>
+            <Input ref={inputRef} />
+            <Footer />
+          </>
+        ) : (
+          //  Signup input
+          <>
+            <SignupInput ref={inputRef}/>
+            <SignupFooter />
+          </>
+        )
+      }
+
+    </div >
   );
 }

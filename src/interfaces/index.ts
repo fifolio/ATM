@@ -1,0 +1,1 @@
+export type { default as useSignup_interface } from './signup/useSignup_interface';

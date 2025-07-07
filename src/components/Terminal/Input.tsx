@@ -1,17 +1,26 @@
 import { useState, forwardRef } from "react";
-import { useHistory, useLoading, useUser } from "../../stores";
-import { help } from "../../commands";
+import { useHistory, useLoading, useSignup, useUser } from "../../stores";
+import { help, signupSteps } from "../../commands";
 
 
 const Input = forwardRef<HTMLInputElement>((_, ref) => {
 
   const { isLoggedin } = useUser();
   const { isLoading } = useLoading();
+  const { setSignupStep } = useSignup();
 
   const [input, setInput] = useState<string>("");
   const { addEntry, setHistory } = useHistory();
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+
+    function metaData() {
+      const time = new Date().toLocaleTimeString();
+      const date = new Date().toDateString();
+      const promptId = Math.floor(Math.random() * 1000000);
+      const responseId = Math.floor(Math.random() * 1000000);
+      return { time, date, promptId, responseId }
+    }
 
     if (input.trim() === "atm clear") {
       setHistory([]);
@@ -26,28 +35,23 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
     if (input.trim() === '') return;
 
     if (input.trim() === 'atm help') {
-      const time = new Date().toLocaleTimeString();
-      const date = new Date().toDateString();
-      const newPromptId = Math.floor(Math.random() * 1000000);
-      const newResponseId = Math.floor(Math.random() * 1000000);
-
       addEntry(
         {
-          id: newPromptId,
-          timestamp: time,
-          date: date,
+          id: metaData().promptId,
+          timestamp: metaData().time,
+          date: metaData().date,
           user: {
-            email: 'useremail@gmail.com',
-            RPU: 1,
-            MRPU: 100,
+            email: '',
+            RPU: 0,
+            MRPU: 0,
           },
           prompt: {
             text: input,
           },
           response:
             [{
-              id: newResponseId,
-              timestamp: time,
+              id: metaData().responseId,
+              timestamp: metaData().time,
               content: help(),
             }
             ]
@@ -56,6 +60,34 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
 
       setInput(""); // Clear the input after adding the entry
     }
+
+    if (input.trim() === 'atm signup') {
+      setSignupStep(0);
+      addEntry(
+        {
+          id: metaData().promptId,
+          timestamp: metaData().time,
+          date: metaData().date,
+          user: {
+            email: '',
+            RPU: 0,
+            MRPU: 0,
+          },
+          prompt: {
+            text: input,
+          },
+          response:
+            [{
+              id: metaData().responseId,
+              timestamp: metaData().time,
+              content: signupSteps()[0].welcome as string,
+            }
+            ]
+        }
+      );
+      setInput(""); // Clear the input after
+    }
+
   }
 
   if (isLoggedin === undefined || isLoading) return (
@@ -77,7 +109,7 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
         className="bg-transparent border-none outline-none text-green-200 font-mono w-full"
         autoFocus
       />
-      <span className="absolute ml-[197px] animate-pulse duration-10 text-green-400">{input.length === 0 ? "█" : ""}</span>
+      <span className="animate-pulse duration-10 text-green-400">{input.length === 0 ? "█" : ""}</span>
     </div>
   );
 });
