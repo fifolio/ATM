@@ -1,6 +1,6 @@
 import { useState, forwardRef } from "react";
-import { useHistory, useLoading, useSignup, useUser } from "../../stores";
-import { help, signupSteps } from "../../commands";
+import { useHistory, useLoading, useLogin, useSignup, useUser } from "../../stores";
+import { help } from "../../commands";
 
 
 const Input = forwardRef<HTMLInputElement>((_, ref) => {
@@ -8,6 +8,7 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
   const { isLoggedin } = useUser();
   const { isLoading } = useLoading();
   const { setSignupStep } = useSignup();
+  const { setLoginStep } = useLogin();
 
   const [input, setInput] = useState<string>("");
   const { addEntry, setHistory } = useHistory();
@@ -63,28 +64,11 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
 
     if (input.trim() === 'atm signup') {
       setSignupStep(0);
-      addEntry(
-        {
-          id: metaData().promptId,
-          timestamp: metaData().time,
-          date: metaData().date,
-          user: {
-            email: '',
-            RPU: 0,
-            MRPU: 0,
-          },
-          prompt: {
-            text: input,
-          },
-          response:
-            [{
-              id: metaData().responseId,
-              timestamp: metaData().time,
-              content: signupSteps()[0].welcome as string,
-            }
-            ]
-        }
-      );
+      setInput(""); // Clear the input after
+    }
+
+    if (input.trim() === 'atm login') {
+      setLoginStep(0);
       setInput(""); // Clear the input after
     }
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useLoading, useSignup, useUser } from "../../../stores";
+import { useLoading, useLogin, useSignup, useUser } from "../../../stores";
 import { signup } from "../../../apis/backend/auth/signup";
 
 
@@ -10,10 +10,24 @@ export default function SignupInput() {
     const { isLoggedin } = useUser();
     const { isLoading, setIsLoading } = useLoading();
     const { signupStep, setSignupStep, signupUserData, setSignupUserData } = useSignup();
+    const { setLoginStep } = useLogin();
 
     const [input, setInput] = useState<string>("");
 
     function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+
+        // Banned commands
+        const bannedCommands = [
+            'atm help',
+            'atm clear',
+            'atm login',
+            'atm signup',
+            'atm logout',
+            'atm details',
+            'atm guide',
+            'atm readme',
+            'atm whoami'
+        ]
 
 
         if (event.key === 'Escape') {
@@ -33,136 +47,173 @@ export default function SignupInput() {
             return;
         }
 
-        if (
-            input.trim() === '' ||
-            input.trim() === 'atm help' ||
-            input.trim() === 'atm clear' ||
-            input.trim() === 'atm login' ||
-            input.trim() === 'atm signup' ||
-            input.trim() === 'atm logout' ||
-            input.trim() === 'atm details' ||
-            input.trim() === 'atm guide' ||
-            input.trim() === 'atm readme' ||
-            input.trim() === 'atm whoami'
-        ) {
-            return
-        }
-
-        if (input.trim() === 'start') {
-            setSignupStep(1);
-            setInput(""); // Clear the input after
-        }
 
         if (event.key === 'Enter') {
 
             // Username validation
-            if (signupStep === 1) {
+            if (signupStep === 0) {
+
+                // Prevent banned commands 
+                if (bannedCommands.includes(input.trim()) || input.trim() === '') {
+                    return;
+                }
+
                 if (input.trim().length < 3 || input.trim().length > 15 || !/^[a-zA-Z_]+$/.test(input.trim())) {
                     return;
                 }
                 setSignupUserData({ username: input.trim().toLowerCase() });
-                setSignupStep(2);
+                setSignupStep(1);
                 setInput("");
             }
 
 
             // Email validation
-            if (signupStep === 2) {
+            if (signupStep === 1) {
+
+                // Prevent banned commands 
+                if (bannedCommands.includes(input.trim()) || input.trim() === '') {
+                    return;
+                }
+
                 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.trim())) {
                     return;
                 }
                 setSignupUserData({ email: input.trim().toLowerCase() });
-                setSignupStep(3);
+                setSignupStep(2);
                 setInput("");
             }
 
             // Password validation
-            if (signupStep === 3) {
+            if (signupStep === 2) {
+
+                // Prevent banned commands 
+                if (bannedCommands.includes(input.trim()) || input.trim() === '') {
+                    return;
+                }
+
                 if (input.trim().length < 8) {
                     return;
                 }
                 setSignupUserData({ password: input.trim() });
-                setSignupStep(4);
+                setSignupStep(3);
                 setInput("");
             }
 
             // Confirm Password validation
-            if (signupStep === 4) {
+            if (signupStep === 3) {
+
+                // Prevent banned commands 
+                if (bannedCommands.includes(input.trim()) || input.trim() === '') {
+                    return;
+                }
+
                 if (input.trim().length < 8 || input.trim() !== signupUserData.password) {
                     return;
                 }
-                setSignupStep(5);
+                setSignupStep(4);
                 setSignupUserData({ ConfirmPassword: input.trim() });
                 setInput("");
             }
 
             // Accept the Terms validation
-            if (signupStep === 5) {
+            if (signupStep === 4) {
+
+                // Prevent banned commands 
+                if (bannedCommands.includes(input.trim()) || input.trim() === '') {
+                    return;
+                }
+
                 if (input.trim() === 'read') {
                     window.open('https://drive.google.com/file/d/1RWhzdw2ChOz18Sx5avUwOA2ulCcejkZl/', '_blank');
                 } else if (input.trim() === 'agree') {
-                    setSignupStep(6);
+                    setSignupStep(5);
                     setSignupUserData({ acceptTerms: input.trim() });
                     setInput("");
                 } else {
                     return;
                 }
             }
+
+            // Handle Data Submit
+            async function handleSubmit() {
+                setIsLoading(true)
+                try {
+                    await signup({
+                        email: signupUserData.email || "",
+                        password: signupUserData.password || "",
+                        username: signupUserData.username || "",
+                    });
+
+                    setSignupUserData({
+                        username: null,
+                        email: null,
+                        password: null,
+                        ConfirmPassword: null,
+                        acceptTerms: null,
+                    })
+
+                    // Move to Next stage Update the UI
+                    setSignupStep(6);
+                    setInput("");
+                    setIsLoading(false)
+                } catch (error) {
+                    setSignupUserData({
+                        username: null,
+                        email: null,
+                        password: null,
+                        ConfirmPassword: null,
+                        acceptTerms: null,
+                    })
+
+                    // Optionally show feedback to user
+                    console.error("Signup failed:", error);
+                    setIsLoading(false)
+                }
+            }
+
+            if (signupStep === 5 && input.trim().toLowerCase() === "atm submit") {
+                handleSubmit();
+            }
+
+            // handle 'ATM Update' 
+            if (signupStep === 5) {
+
+                // Prevent banned commands 
+                if (bannedCommands.includes(input.trim()) || input.trim() === '') {
+                    return;
+                }
+
+                switch (input.trim()) {
+                    case 'atm update username':
+                        setSignupStep(0);
+                        setInput("");
+                        break;
+                    case 'atm update email':
+                        setSignupStep(1);
+                        setInput("");
+                        break;
+                    case 'atm update password':
+                        setSignupStep(2);
+                        setInput("");
+                        break;
+                    case 'atm update confirm password':
+                        setSignupStep(3);
+                        setInput("");
+                        break;
+                    case 'atm update accept terms':
+                        setSignupStep(4);
+                        setInput("");
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if (signupStep === 6 && input.trim().toLowerCase() === "atm login") {
+                setSignupStep(null)
+                setLoginStep(0)
+            }
         };
-
-        // Handle Data Submit
-        async function handleSubmit() {
-            setIsLoading(true)
-            try {
-                await signup({
-                    email: signupUserData.email || "",
-                    password: signupUserData.password || "",
-                    username: signupUserData.username || "",
-                });
-
-                // Move to Next stage Update the UI
-                setSignupStep(7);
-                setInput("");
-                setIsLoading(false)
-            } catch (error) {
-                // Optionally show feedback to user
-                console.error("Signup failed:", error);
-                setIsLoading(false)
-            }
-        }
-
-        if (signupStep === 6 && input.trim().toLowerCase() === "atm submit") {
-            handleSubmit();
-        }
-
-
-        // Update Username
-        if (signupStep === 6) {
-            switch (input.trim()) {
-                case 'atm update username':
-                    setSignupStep(1);
-                    setInput("");
-                    break;
-                case 'atm update email':
-                    setSignupStep(2);
-                    setInput("");
-                    break;
-                case 'atm update password':
-                    setSignupStep(3);
-                    setInput("");
-                    break;
-                case 'atm update confirm password':
-                    setSignupStep(4);
-                    setInput("");
-                    break;
-                case 'atm update accept terms':
-                    setSignupStep(5);
-                    setInput("");
-                    break;
-                default:
-                    break;
-            }
-        }
 
     }
 
@@ -180,6 +231,7 @@ export default function SignupInput() {
         };
     }, []);
 
+
     if (isLoggedin === undefined || isLoading) return (
         <div className="flex space-x-1">
             <div className="text-orange-400">Please wait</div>
@@ -192,23 +244,22 @@ export default function SignupInput() {
             <div className="m-0 p-0 flex">
                 <div className="text-orange-400">
                     {
-                        signupStep === 0 ? "Type 'start' to begin your account signup process:~$" :
-                            signupStep === 1 ? 'Enter a username:~$' :
-                                signupStep === 2 ? 'Enter your email address:~$' :
-                                    signupStep === 3 ? 'Create a password:~$' :
-                                        signupStep === 4 ? 'Confirm your password:~$' :
-                                            signupStep === 5 ? "Type 'read' to view the Terms of Use and Privacy Policy, or type 'agree' to accept and continue:~$" :
-                                                signupStep === 6 ? "Update your info using the instructions above, or type 'atm submit' to finish creating your account:~$" :
-                                                    signupStep === 7 ? "Type 'atm login' to activate your account:~$" :
-                                                        null
+                        signupStep === 0 ? 'Enter a username:~$' :
+                            signupStep === 1 ? 'Enter your email address:~$' :
+                                signupStep === 2 ? 'Create a password:~$' :
+                                    signupStep === 3 ? 'Confirm your password:~$' :
+                                        signupStep === 4 ? "Type 'read' to view the Terms of Use and Privacy Policy, or type 'agree' to accept and continue:~$" :
+                                            signupStep === 5 ? "Update your info using the instructions above, or type 'atm submit' to finish creating your account:~$" :
+                                                signupStep === 6 ? "Type 'atm login' to activate your account:~$" :
+                                                    null
                     }
                 </div>
                 <input
                     ref={inputRef}
                     type={
-                        signupStep === 2 ? 'email' :
-                            signupStep === 3 ? 'password' :
-                                signupStep === 4 ? 'password' :
+                        signupStep === 1 ? 'email' :
+                            signupStep === 2 ? 'password' :
+                                signupStep === 3 ? 'password' :
                                     'text'
                     }
                     value={input.toLowerCase()}

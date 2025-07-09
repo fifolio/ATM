@@ -117,7 +117,7 @@ export default function SignupStepsInfo() {
                     {signupUserData.acceptTerms === 'agree' && <CircleCheck className="text-green-500" size={30} />}
                 </div>
 
-                {signupStep === 6 && (
+                {signupStep === 5 && (
                     <p className="mb-5 text-gray-400">
                         To update your info, type <span className="text-white">'atm update'</span> followed by the field name. i.e., <span className="text-white">'atm update username'</span> or <span className="text-white">'atm update password'</span>.
                     </p>

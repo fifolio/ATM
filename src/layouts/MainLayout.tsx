@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import { AccountReadyMsg, Footer, Header, Input, SignupInput, SignupStepsInfo } from "../components";
-import { useHistory, useSignup, useUser } from "../stores";
+import { AccountReadyMsg, Footer, Header, Input, LoginFooter, LoginInput, LoginStepsInfo, SignupInput, SignupStepsInfo } from "../components";
+import { useHistory, useLogin, useSignup, useUser } from "../stores";
 import SignupFooter from "../components/Terminal/signup/SignupFooter";
 
 
@@ -8,6 +8,8 @@ export default function MainLayout() {
 
   const { isLoggedin } = useUser();
   const { signupStep } = useSignup();
+  const { loginStep } = useLogin();
+
 
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
@@ -33,10 +35,12 @@ export default function MainLayout() {
           {/* Welcome header context */}
           <Header />
 
-          {
-            signupStep !== null && signupStep > 0 && signupStep <= 6 ? (
+          {loginStep !== null ? (
+            <LoginStepsInfo />
+          ) :
+            signupStep !== null && signupStep >= 0 && signupStep <= 5 ? (
               <SignupStepsInfo />
-            ) : signupStep === 7 ? (
+            ) : signupStep === 6 ? (
               <AccountReadyMsg />
             ) : (
               history.map((record, recordIndex) => (
@@ -69,25 +73,25 @@ export default function MainLayout() {
 
           <div ref={bottomRef} />
         </div>
-
       </div>
 
 
-      {
-        signupStep === null ? (
-          // Prompts input + Footer
-          <>
-            <Input ref={inputRef} />
-            <Footer />
-          </>
-        ) : (
-          //  Signup input
-          <>
-            <SignupInput />
-            <SignupFooter />
-          </>
-        )
-      }
+      {signupStep !== null ? (
+        <>
+          <SignupInput />
+          <SignupFooter />
+        </>
+      ) : loginStep !== null ? (
+        <>
+          <LoginInput />
+          <LoginFooter />
+        </>
+      ) : (
+        <>
+          <Input ref={inputRef} />
+          <Footer />
+        </>
+      )}
 
     </div >
   );
