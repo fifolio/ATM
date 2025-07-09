@@ -1,17 +1,19 @@
 import { useEffect, useRef, useState } from "react";
-import { useLoading, useLogin, useUser } from "../../../stores";
+import { useLoading, useLogin, useUser, useUserData } from "../../../stores";
 import { login } from "../../../apis/backend/auth/login";
+import { userData } from "../../../apis";
 
 
 export default function LoginInput() {
 
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const { isLoggedin } = useUser();
+    const { isLoggedin, setIsLoggedin } = useUser();
     const { isLoading, setIsLoading } = useLoading();
     const { loginStep, setLoginStep, loginUserData, setLoginUserData, setLoginError } = useLogin();
-
     const [input, setInput] = useState<string>("");
+
+    const { setUserData } = useUserData();
 
     function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
 
@@ -112,25 +114,34 @@ export default function LoginInput() {
                     password: null,
                 });
 
+                // Login successful
                 if (response.success) {
-                    // Login successful
                     setLoginStep(null);
                     setLoginError(null);
-                    setLoginStep(0);
+                    setIsLoggedin(true);
+
+                    async function getUserData() {
+                        const response = await userData();
+                        if (response) {
+                            setUserData(response);
+                            setIsLoading(false);
+                        }
+                    }
+
+                    getUserData()
                 } else {
                     // Login failed
                     setLoginError((response.error as Error).message);
                     setLoginStep(0);
+                    setIsLoading(false);
                 }
 
-                setIsLoading(false);
             }
 
             handleSubmit();
         }
 
     }, [loginStep])
-
 
 
     if (isLoggedin === undefined || isLoading) return (

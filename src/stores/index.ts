@@ -3,3 +3,4 @@ export { default as useUser } from './user/useUser';
 export { default as useLoading } from './loading/useLoading';
 export { default as useSignup } from './signup/useSignup';
 export { default as useLogin } from './login/useLogin';
+export { default as useUserData } from './userData/useUserData';

@@ -1,12 +1,14 @@
-import { useState, forwardRef } from "react";
-import { useHistory, useLoading, useLogin, useSignup, useUser } from "../../stores";
+import { useState, forwardRef, useEffect } from "react";
+import { useHistory, useLoading, useLogin, useSignup, useUser, useUserData } from "../../stores";
 import { help } from "../../commands";
 
 
 const Input = forwardRef<HTMLInputElement>((_, ref) => {
 
+  const { userData } = useUserData();
+
   const { isLoggedin } = useUser();
-  const { isLoading } = useLoading();
+  const { isLoading, setIsLoading } = useLoading();
   const { setSignupStep } = useSignup();
   const { setLoginStep } = useLogin();
 
@@ -42,9 +44,9 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
           timestamp: metaData().time,
           date: metaData().date,
           user: {
-            email: '',
-            RPU: 0,
-            MRPU: 0,
+            email: userData?.email || '',
+            RPU: userData?.prefs?.RPU || 0,
+            MRPU: userData?.prefs?.MRPU || 0,
           },
           prompt: {
             text: input,
@@ -74,6 +76,16 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
 
   }
 
+  useEffect(() => {
+    if (userData === null) {
+      setTimeout(() => {
+        setIsLoading(false)
+      }, 2000);
+    }
+  }, [isLoggedin])
+
+
+
   if (isLoggedin === undefined || isLoading) return (
     <div className="flex space-x-1">
       <div className="text-green-400">Please wait</div>
@@ -83,7 +95,9 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
 
   return (
     <div className="flex space-x-1">
-      <div className="text-green-400">guest@automission.ai:~$</div>
+      <div className="text-green-400">
+        {`${userData?.name || 'guest'}@automission.ai:~$`}
+      </div>
       <input
         ref={ref}
         type="text"
