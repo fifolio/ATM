@@ -20,7 +20,10 @@ const useSignup = create<useSignup_interface>((set) => ({
                 ...state.signupUserData,
                 ...partial,
             }
-        }))
+        })),
+
+    signupError: null,
+    setSignupError: (state) => set({ signupError: state }),
 
 }));
 

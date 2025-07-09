@@ -12,4 +12,7 @@ export default interface useSignup_interface {
     signupUserData: SignupUserData;
     setSignupUserData: (state: Partial<SignupUserData>) => void;
 
+    signupError: string | null;
+    setSignupError: (state: string | null) => void;
+
 }

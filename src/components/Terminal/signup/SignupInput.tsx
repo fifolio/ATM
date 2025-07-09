@@ -9,7 +9,7 @@ export default function SignupInput() {
 
     const { isLoggedin } = useUser();
     const { isLoading, setIsLoading } = useLoading();
-    const { signupStep, setSignupStep, signupUserData, setSignupUserData } = useSignup();
+    const { signupStep, setSignupStep, signupUserData, setSignupUserData, setSignupError } = useSignup();
     const { setLoginStep } = useLogin();
 
     const [input, setInput] = useState<string>("");
@@ -40,6 +40,7 @@ export default function SignupInput() {
                 acceptTerms: null,
             })
             setInput('');
+            setSignupError(null)
             return;
         }
 
@@ -136,27 +137,20 @@ export default function SignupInput() {
 
             // Handle Data Submit
             async function handleSubmit() {
-                setIsLoading(true)
-                try {
-                    await signup({
-                        email: signupUserData.email || "",
-                        password: signupUserData.password || "",
-                        username: signupUserData.username || "",
-                    });
+                setIsLoading(true);
 
-                    setSignupUserData({
-                        username: null,
-                        email: null,
-                        password: null,
-                        ConfirmPassword: null,
-                        acceptTerms: null,
-                    })
+                const response = await signup({
+                    email: signupUserData.email || "",
+                    password: signupUserData.password || "",
+                    username: signupUserData.username || "",
+                });
 
-                    // Move to Next stage Update the UI
+
+                if (response.success) {
+                    // Signup successful
+                    setSignupError(null);
                     setSignupStep(6);
                     setInput("");
-                    setIsLoading(false)
-                } catch (error) {
                     setSignupUserData({
                         username: null,
                         email: null,
@@ -164,12 +158,15 @@ export default function SignupInput() {
                         ConfirmPassword: null,
                         acceptTerms: null,
                     })
+                } else {
+                    // Signup failed
+                    setSignupError((response.error as Error).message);
 
-                    // Optionally show feedback to user
-                    console.error("Signup failed:", error);
-                    setIsLoading(false)
                 }
+
+                setIsLoading(false);
             }
+
 
             if (signupStep === 5 && input.trim().toLowerCase() === "atm submit") {
                 handleSubmit();
@@ -249,7 +246,7 @@ export default function SignupInput() {
                                 signupStep === 2 ? 'Create a password:~$' :
                                     signupStep === 3 ? 'Confirm your password:~$' :
                                         signupStep === 4 ? "Type 'read' to view the Terms of Use and Privacy Policy, or type 'agree' to accept and continue:~$" :
-                                            signupStep === 5 ? "Update your info using the instructions above, or type 'atm submit' to finish creating your account:~$" :
+                                            signupStep === 5 ? "Update your info, or type 'atm submit' to signup your account:~$" :
                                                 signupStep === 6 ? "Type 'atm login' to activate your account:~$" :
                                                     null
                     }

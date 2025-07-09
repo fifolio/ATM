@@ -3,7 +3,7 @@ import { useSignup } from "../../../stores";
 
 export default function SignupStepsInfo() {
 
-    const { signupUserData, signupStep } = useSignup();
+    const { signupUserData, signupStep, signupError } = useSignup();
 
     return (
         <div className="text-white mt-5 font-mono space-y-3 ml-10">
@@ -117,13 +117,15 @@ export default function SignupStepsInfo() {
                     {signupUserData.acceptTerms === 'agree' && <CircleCheck className="text-green-500" size={30} />}
                 </div>
 
-                {signupStep === 5 && (
-                    <p className="mb-5 text-gray-400">
-                        To update your info, type <span className="text-white">'atm update'</span> followed by the field name. i.e., <span className="text-white">'atm update username'</span> or <span className="text-white">'atm update password'</span>.
-                    </p>
-                )}
+                {/* Errors */}
+                {signupError !== null && (<p className="mb-5 text-red-400">An account with this email already exists. Please use a different email to sign up</p>)}</div>
 
-            </div>
+            {signupStep === 5 && (
+                <p className="mb-5 text-gray-400">
+                    To update your info, type <span className="text-white">'atm update'</span> followed by the field name. i.e., <span className="text-white">'atm update username'</span> or <span className="text-white">'atm update password'</span>.
+                </p>
+            )}
+
         </div>
     );
 }
