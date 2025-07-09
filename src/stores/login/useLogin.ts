@@ -10,14 +10,16 @@ const useLogin = create<useLogin_interface>((set) => ({
         email: null,
         password: null,
     },
-
     setLoginUserData: (partial) =>
         set((state) => ({
             loginUserData: {
                 ...state.loginUserData,
                 ...partial,
             }
-        }))
+        })),
+
+    loginError: null,
+    setLoginError: (state) => set({ loginError: state })
 
 }));
 

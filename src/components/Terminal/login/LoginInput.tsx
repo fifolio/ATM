@@ -9,7 +9,7 @@ export default function LoginInput() {
 
     const { isLoggedin } = useUser();
     const { isLoading, setIsLoading } = useLoading();
-    const { loginStep, setLoginStep, loginUserData, setLoginUserData } = useLogin();
+    const { loginStep, setLoginStep, loginUserData, setLoginUserData, setLoginError } = useLogin();
 
     const [input, setInput] = useState<string>("");
 
@@ -35,6 +35,7 @@ export default function LoginInput() {
                 password: null,
             })
             setInput('');
+            setLoginError(null)
             return;
         }
 
@@ -114,10 +115,12 @@ export default function LoginInput() {
                 if (response.success) {
                     // Login successful
                     setLoginStep(null);
+                    setLoginError(null);
+                    setLoginStep(0);
                 } else {
                     // Login failed
-                    console.error("Login failed:", response.error);
-                    setLoginStep(2); // Stay on the same step and show an error message
+                    setLoginError((response.error as Error).message);
+                    setLoginStep(0);
                 }
 
                 setIsLoading(false);

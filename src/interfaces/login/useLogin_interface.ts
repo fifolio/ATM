@@ -9,4 +9,6 @@ export default interface useLogin_interface {
     loginUserData: LoginUserData;
     setLoginUserData: (state: Partial<LoginUserData>) => void;
 
+    loginError: string | null,
+    setLoginError: (state: string | null) => void;
 }

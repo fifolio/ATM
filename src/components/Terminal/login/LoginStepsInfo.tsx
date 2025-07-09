@@ -1,9 +1,9 @@
-import { ArrowRight, CircleCheck } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useLogin, } from "../../../stores";
 
 export default function LoginStepsInfo() {
 
-    const { loginUserData } = useLogin();
+    const { loginUserData, loginError } = useLogin();
 
     return (
         <div className="text-white mt-5 font-mono space-y-3 ml-10">
@@ -33,7 +33,6 @@ export default function LoginStepsInfo() {
                             Enter the email you used to register your account.
                         </div>
                     </div>
-                    {loginUserData.email && <CircleCheck className="text-green-500" size={30} />}
                 </div>
 
                 {/* Step 2 */}
@@ -55,15 +54,10 @@ export default function LoginStepsInfo() {
                             Enter your account password to log in securely.
                         </div>
                     </div>
-                    {loginUserData.password && <CircleCheck className="text-green-500" size={30} />}
                 </div>
 
-
                 {/* Errors */}
-                <p className="mb-5 text-red-400 hidden">
-                    Errors shown here
-                </p>
-            </div>
+                {loginError !== null && (<p className="mb-5 text-red-400">{loginError}</p>)}</div>
         </div>
     );
 }
