@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLoading, useLogin, useUser, useUserData } from "../../../stores";
 import { login } from "../../../apis/backend/auth/login";
 import { userData } from "../../../apis";
+import useHeader from "../../../stores/header/useHeader";
 
 
 export default function LoginInput() {
@@ -14,6 +15,8 @@ export default function LoginInput() {
     const [input, setInput] = useState<string>("");
 
     const { setUserData } = useUserData();
+
+    const { setDisplayHelpContext } = useHeader();
 
     function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
 
@@ -31,6 +34,7 @@ export default function LoginInput() {
         ]
 
         if (event.key === 'Escape') {
+            setDisplayHelpContext(true)
             setLoginStep(null);
             setLoginUserData({
                 email: null,
@@ -119,7 +123,7 @@ export default function LoginInput() {
                     setLoginStep(null);
                     setLoginError(null);
                     setIsLoggedin(true);
-
+                    setDisplayHelpContext(true)
                     async function getUserData() {
                         const response = await userData();
                         if (response) {

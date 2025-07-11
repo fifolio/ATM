@@ -1,9 +1,16 @@
 import { ArrowRight } from "lucide-react";
 import { useLogin, } from "../../../stores";
+import useHeader from "../../../stores/header/useHeader";
+import { useEffect } from "react";
 
 export default function LoginStepsInfo() {
 
     const { loginUserData, loginError } = useLogin();
+    const { setDisplayHelpContext } = useHeader();
+
+    useEffect(() => {
+        setDisplayHelpContext(false)
+    }, [])
 
     return (
         <div className="text-white mt-5 font-mono space-y-3 ml-10">

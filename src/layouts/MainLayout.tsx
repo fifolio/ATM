@@ -1,15 +1,18 @@
 import { useEffect, useRef } from "react";
-import { AccountReadyMsg, Footer, Header, Input, LoginFooter, LoginInput, LoginStepsInfo, SignupInput, SignupStepsInfo } from "../components";
-import { useHistory, useLogin, useSignup, useUser } from "../stores";
+import { AccountReadyMsg, Footer, Header, Input, LoginFooter, LoginInput, LoginStepsInfo, ResetPasswordFooter, ResetPasswordInput, ResetPasswordStepsInfo, SignupInput, SignupStepsInfo, ResetPasswordLinkSentMsg } from "../components";
+import { useHistory, useLogin, useResetPassword, useSignup } from "../stores";
 import SignupFooter from "../components/Terminal/signup/SignupFooter";
+import useHeader from "../stores/header/useHeader";
+type Props = {
+  route?: string;
+}
 
+export default function MainLayout({ route }: Props) {
 
-export default function MainLayout() {
-
-  const { isLoggedin } = useUser();
   const { signupStep } = useSignup();
   const { loginStep } = useLogin();
-
+  const { setDisplayHelpContext } = useHeader();
+  const { resetPasswordStep } = useResetPassword()
 
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
@@ -21,6 +24,17 @@ export default function MainLayout() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [history, signupStep]);
+
+  useEffect(() => {
+    setDisplayHelpContext(true)
+  }, [])
+
+  // Check if there's an active session
+  useEffect(() => {
+    if (window.location.href.includes("reset")) {
+      setDisplayHelpContext(false)
+    }
+  }, []);
 
   return (
     <div
@@ -43,32 +57,35 @@ export default function MainLayout() {
             ) : signupStep === 6 ? (
               <AccountReadyMsg />
             ) : (
-              history.map((record, recordIndex) => (
-                <div key={record.id ?? recordIndex} className="border-b border-gray-700 pb-2">
-                  <p className="text-green-400">
-                    <span className="font-bold">({record.timestamp}):</span>{" "}
-                    <span className="text-green-200">{record.prompt.text}</span>
-                  </p>
-                  {record.response.map((res, resIndex) => (
-                    <div key={resIndex} className="text-white ml-4">
-                      <div>
-                        <span className="font-bold">➜({res.timestamp}):</span>
-                        <pre className="-mt-5 ml-2 whitespace-pre-wrap">{res.content}</pre>
+              route == 'resetPassword' && resetPasswordStep !== null && resetPasswordStep >= 0 && resetPasswordStep < 2 ? (
+                <ResetPasswordStepsInfo />
+              ) : resetPasswordStep === 2 ? (
+                <ResetPasswordLinkSentMsg />
+              ) :
+                history.map((record, recordIndex) => (
+                  <div key={record.id ?? recordIndex} className="border-b border-gray-700 pb-2">
+                    <p className="text-green-400">
+                      <span className="font-bold">({record.timestamp}):</span>{" "}
+                      <span className="text-green-200">{record.prompt.text}</span>
+                    </p>
+                    {record.response.map((res, resIndex) => (
+                      <div key={resIndex} className="text-white ml-4">
+                        <div>
+                          <span className="font-bold">➜({res.timestamp}):</span>
+                          <pre className="-mt-5 ml-2 whitespace-pre-wrap">{res.content}</pre>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
 
-                  {isLoggedin && (
                     <>
                       {/* Display the user basic infos */}
-                      {record.user && (
+                      {record.user.email === '' ? null : (
                         <p key={recordIndex++} className="text-orange-200 mt-2">{record.date} • {record.user.email} • Number of requests used: ({record.user.RPU}/{record.user.MRPU})</p>
                       )}
                     </>
-                  )}
 
-                </div>
-              ))
+                  </div>
+                ))
             )}
 
           <div ref={bottomRef} />
@@ -85,6 +102,11 @@ export default function MainLayout() {
         <>
           <LoginInput />
           <LoginFooter />
+        </>
+      ) : route == 'resetPassword' ? (
+        <>
+          <ResetPasswordInput />
+          <ResetPasswordFooter />
         </>
       ) : (
         <>

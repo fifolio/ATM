@@ -1,9 +1,18 @@
 import { ArrowRight, CircleCheck } from "lucide-react";
 import { useSignup } from "../../../stores";
+import { useEffect } from "react";
+import useHeader from "../../../stores/header/useHeader";
 
 export default function SignupStepsInfo() {
 
     const { signupUserData, signupStep, signupError } = useSignup();
+
+    const { setDisplayHelpContext } = useHeader();
+
+    useEffect(() => {
+        setDisplayHelpContext(false)
+    }, [])
+
 
     return (
         <div className="text-white mt-5 font-mono space-y-3 ml-10">
@@ -122,7 +131,7 @@ export default function SignupStepsInfo() {
 
             {signupStep === 5 && (
                 <p className="mb-5 text-gray-400">
-                    To update your info, type <span className="text-white">'atm update'</span> followed by the field name. i.e., <span className="text-white">'atm update username'</span> or <span className="text-white">'atm update password'</span>.
+                    To update your info, type <span className="text-white">'atm update'</span> followed by the field name. (i.e., <span className="text-white">'atm update username'</span> or <span className="text-white">'atm update password'</span>).
                 </p>
             )}
 

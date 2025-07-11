@@ -1,17 +1,24 @@
 import { useEffect } from "react";
+import { BrowserRouter, Routes, Route } from "react-router";
 import { useUser, useUserData } from "./stores";
 import { checkSession, userData } from "./apis";
 import MainLayout from "./layouts/MainLayout";
+import useHeader from "./stores/header/useHeader";
 
 
 export default function App() {
 
   const { setIsLoggedin, setUserId } = useUser();
   const { setUserData } = useUserData();
-
+  const { setDisplayHelpContext } = useHeader();
 
   // Check if there's an active session
   useEffect(() => {
+
+    if (window.location.href.includes("reset")) {
+      setDisplayHelpContext(false)
+    }
+
     async function sessionCheck() {
       try {
         const response = await checkSession();
@@ -46,8 +53,13 @@ export default function App() {
   }, []);
 
 
-
   return (
-    <MainLayout />
+    <BrowserRouter>
+      <Routes>
+        <Route index element={<MainLayout />} />
+        <Route path='*' element={<MainLayout />} />
+        <Route path="reset" element={<MainLayout route={'resetPassword'} />} />
+      </Routes>
+    </BrowserRouter>
   )
 }

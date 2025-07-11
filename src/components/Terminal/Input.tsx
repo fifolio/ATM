@@ -1,6 +1,7 @@
 import { useState, forwardRef, useEffect } from "react";
 import { useHistory, useLoading, useLogin, useSignup, useUser, useUserData } from "../../stores";
 import { help } from "../../commands";
+import { useNavigate } from "react-router";
 
 
 const Input = forwardRef<HTMLInputElement>((_, ref) => {
@@ -14,6 +15,8 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
 
   const [input, setInput] = useState<string>("");
   const { addEntry, setHistory } = useHistory();
+
+  const navigate = useNavigate();
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
 
@@ -72,6 +75,10 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
     if (input.trim() === 'atm login') {
       setLoginStep(0);
       setInput(""); // Clear the input after
+    }
+
+    if (input.trim() === 'atm reset p') {
+      navigate('/reset')
     }
 
   }

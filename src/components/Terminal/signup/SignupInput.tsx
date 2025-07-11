@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLoading, useLogin, useSignup, useUser } from "../../../stores";
 import { signup } from "../../../apis/backend/auth/signup";
+import useHeader from "../../../stores/header/useHeader";
 
 
 export default function SignupInput() {
@@ -11,6 +12,8 @@ export default function SignupInput() {
     const { isLoading, setIsLoading } = useLoading();
     const { signupStep, setSignupStep, signupUserData, setSignupUserData, setSignupError } = useSignup();
     const { setLoginStep } = useLogin();
+
+    const { setDisplayHelpContext } = useHeader();
 
     const [input, setInput] = useState<string>("");
 
@@ -31,6 +34,7 @@ export default function SignupInput() {
 
 
         if (event.key === 'Escape') {
+            setDisplayHelpContext(true)
             setSignupStep(null);
             setSignupUserData({
                 username: null,
