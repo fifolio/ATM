@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { useLoading, useResetPassword } from "../../../stores";
-import { resetPassword } from "../../../apis";
+import { useLoading, useResetPassword } from "../../../../stores";
+import { resetPassword } from "../../../../apis";
 
 
 export default function ResetPasswordInput() {

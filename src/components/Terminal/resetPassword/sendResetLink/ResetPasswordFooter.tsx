@@ -1,4 +1,4 @@
-export default function LoginFooter() {
+export default function ResetPasswordFooter() {
     return (
         <div className="flex justify-between text-gray-400 border-t border-gray-700">
             <div className="m-0 p-0">

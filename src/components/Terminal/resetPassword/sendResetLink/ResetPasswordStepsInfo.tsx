@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { ArrowRight } from "lucide-react";
-import { useResetPassword } from "../../../stores";
-import useHeader from "../../../stores/header/useHeader";
+import { useResetPassword } from "../../../../stores";
+import useHeader from "../../../../stores/header/useHeader";
 
 export default function ResetPasswordStepsInfo() {
 

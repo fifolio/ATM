@@ -4,7 +4,7 @@ export async function resetPassword(email: string) {
     try {
         const res = await account.createRecovery(
             email,
-            `${window.location.origin}/reset`
+            `${window.location.origin}/cpr`
         );
         return {
             success: true,

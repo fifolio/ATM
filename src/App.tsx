@@ -58,7 +58,12 @@ export default function App() {
       <Routes>
         <Route index element={<MainLayout />} />
         <Route path='*' element={<MainLayout />} />
-        <Route path="reset" element={<MainLayout route={'resetPassword'} />} />
+        <Route path="reset" element={<MainLayout route={'resetPassword_sendResetLink'} />} />
+        <Route 
+        path="cpr" // CPR (complete password reset) 
+        element={<MainLayout route={'resetPassword_resetInput'} />} />
+      
+      
       </Routes>
     </BrowserRouter>
   )
