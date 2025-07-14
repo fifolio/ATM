@@ -140,7 +140,6 @@ export default function ResetPasswordInput() {
                     return;
 
                 } else if (input.trim() === 'atm reset p') {
-                    console.log('go to reset')
                     navigate('/reset');
                 }
             }

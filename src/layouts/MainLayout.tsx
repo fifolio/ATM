@@ -39,7 +39,6 @@ export default function MainLayout({ route }: Props) {
     }
   }, []);
 
-  useEffect(() => {console.log(resetNewPasswordStep)}, [resetNewPasswordStep])
 
   return (
     <div

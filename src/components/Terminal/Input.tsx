@@ -2,6 +2,7 @@ import { useState, forwardRef, useEffect } from "react";
 import { useHistory, useLoading, useLogin, useSignup, useUser, useUserData } from "../../stores";
 import { help } from "../../commands";
 import { useNavigate } from "react-router";
+import { logout } from "../../apis/backend/auth/logout";
 
 
 const Input = forwardRef<HTMLInputElement>((_, ref) => {
@@ -81,6 +82,27 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
       navigate('/reset')
     }
 
+    if (input.trim() === 'atm logout') {
+      if (userData !== null) {
+        setIsLoading(true)
+        async function handleLogout() {
+          setIsLoading(true)
+          const res = await logout();
+          if (res) {
+            window.location.reload()
+          } else {
+            console.error('Can not logout! something went wrong while logging out!');
+            setIsLoading(false)
+          }
+        }
+        handleLogout()
+        setInput(""); // Clear the input after
+      } else {
+        setIsLoading(false)
+        return
+      }
+    }
+
   }
 
   useEffect(() => {
@@ -89,7 +111,7 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
         setIsLoading(false)
       }, 2000);
     }
-  }, [isLoggedin])
+  }, [])
 
 
 
