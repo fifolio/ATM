@@ -1,6 +1,6 @@
 import { useState, forwardRef, useEffect } from "react";
 import { useHistory, useLoading, useLogin, useSignup, useUser, useUserData } from "../../stores";
-import { guests_help, users_help } from "../../commands";
+import { guests_help, users_help, whoami } from "../../commands";
 import { useNavigate } from "react-router";
 import { logout } from "../../apis/backend/auth/logout";
 
@@ -66,6 +66,35 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
       setInput(""); // Clear the input after adding the entry
     }
 
+    if (input.trim() === 'atm whoami') {
+      if (userData == null) return;
+
+      addEntry(
+        {
+          id: metaData().promptId,
+          timestamp: metaData().time,
+          date: metaData().date,
+          user: {
+            email: userData.email,
+            RPU: userData.prefs?.RPU,
+            MRPU: userData.prefs?.MRPU,
+          },
+          prompt: {
+            text: input,
+          },
+          response:
+            [{
+              id: metaData().responseId,
+              timestamp: metaData().time,
+              content: whoami(userData.name, userData.email),
+            }
+            ]
+        }
+      );
+
+      setInput(""); // Clear the input after adding the entry
+    }
+
     if (input.trim() === 'atm signup') {
       if (userData !== null) return;
 
@@ -81,7 +110,7 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
     }
 
     if (input.trim() === 'atm reset p') {
-    if (userData !== null) return;
+      if (userData !== null) return;
 
       navigate('/reset')
     }
@@ -116,6 +145,10 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
       }, 2000);
     }
   }, [])
+
+  useEffect(() => {
+    console.log(userData)
+  }, [userData])
 
 
   if (isLoggedin === undefined || isLoading) return (
