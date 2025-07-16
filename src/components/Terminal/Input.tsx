@@ -81,6 +81,8 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
     }
 
     if (input.trim() === 'atm reset p') {
+    if (userData !== null) return;
+
       navigate('/reset')
     }
 
