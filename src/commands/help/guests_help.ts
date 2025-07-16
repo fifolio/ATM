@@ -1,4 +1,4 @@
-function help() {
+function guests_help() {
     return (
            `
             Available commands:
@@ -16,4 +16,4 @@ function help() {
     )
 } 
 
-export default help;
+export default guests_help;

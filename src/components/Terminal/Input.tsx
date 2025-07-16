@@ -1,6 +1,6 @@
 import { useState, forwardRef, useEffect } from "react";
 import { useHistory, useLoading, useLogin, useSignup, useUser, useUserData } from "../../stores";
-import { help } from "../../commands";
+import { guests_help, users_help } from "../../commands";
 import { useNavigate } from "react-router";
 import { logout } from "../../apis/backend/auth/logout";
 
@@ -8,12 +8,10 @@ import { logout } from "../../apis/backend/auth/logout";
 const Input = forwardRef<HTMLInputElement>((_, ref) => {
 
   const { userData } = useUserData();
-
   const { isLoggedin } = useUser();
   const { isLoading, setIsLoading } = useLoading();
   const { setSignupStep } = useSignup();
   const { setLoginStep } = useLogin();
-
   const [input, setInput] = useState<string>("");
   const { addEntry, setHistory } = useHistory();
 
@@ -59,7 +57,7 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
             [{
               id: metaData().responseId,
               timestamp: metaData().time,
-              content: help(),
+              content: userData !== null ? users_help() : guests_help(),
             }
             ]
         }
@@ -69,11 +67,15 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
     }
 
     if (input.trim() === 'atm signup') {
+      if (userData !== null) return;
+
       setSignupStep(0);
       setInput(""); // Clear the input after
     }
 
     if (input.trim() === 'atm login') {
+      if (userData !== null) return;
+
       setLoginStep(0);
       setInput(""); // Clear the input after
     }
@@ -112,7 +114,6 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
       }, 2000);
     }
   }, [])
-
 
 
   if (isLoggedin === undefined || isLoading) return (

@@ -25,8 +25,8 @@ export default function MainLayout({ route }: Props) {
 
   // Scroll to bottom whenever `history` changes
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [history, signupStep]);
+    bottomRef.current?.scrollIntoView({ behavior: "instant" });
+  }, [history, signupStep, signupStep, loginStep, resetPasswordStep, resetNewPasswordStep]);
 
   useEffect(() => {
     setDisplayHelpContext(true)
