@@ -1,6 +1,6 @@
 import { useState, forwardRef, useEffect } from "react";
 import { useHistory, useLoading, useLogin, useSignup, useUser, useUserData } from "../../stores";
-import { guests_help, users_help, whoami } from "../../commands";
+import { details, guests_help, users_help, whoami } from "../../commands";
 import { useNavigate } from "react-router";
 import { logout } from "../../apis/backend/auth/logout";
 
@@ -95,6 +95,58 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
       setInput(""); // Clear the input after adding the entry
     }
 
+    if (input.trim() === 'atm details') {
+      if (userData == null) return;
+
+      addEntry(
+        {
+          id: metaData().promptId,
+          timestamp: metaData().time,
+          date: metaData().date,
+          user: {
+            email: userData.email,
+            RPU: userData.prefs?.RPU,
+            MRPU: userData.prefs?.MRPU,
+          },
+          prompt: {
+            text: input,
+          },
+          response:
+            [{
+              id: metaData().responseId,
+              timestamp: metaData().time,
+              content: details(
+                userData.name,
+                userData.email,
+                userData.emailVerification,
+                new Date(userData.registration).toLocaleString('en-US', {
+                  timeZone: 'UTC',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  timeZoneName: 'short'
+                }),
+                new Date(userData.passwordUpdate).toLocaleString('en-US', {
+                  timeZone: 'UTC',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  timeZoneName: 'short'
+                }),
+                userData.prefs.RPU,
+                userData.prefs.MRPU),
+            }
+            ]
+        }
+      );
+
+      setInput(""); // Clear the input after adding the entry
+    }
+
     if (input.trim() === 'atm signup') {
       if (userData !== null) return;
 
@@ -146,11 +198,7 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
     }
   }, [])
 
-  useEffect(() => {
-    console.log(userData)
-  }, [userData])
-
-
+  
   if (isLoggedin === undefined || isLoading) return (
     <div className="flex space-x-1">
       <div className="text-green-400">Please wait</div>
