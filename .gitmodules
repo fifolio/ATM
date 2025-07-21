@@ -1,3 +1,0 @@
-[submodule "src/ciphermind"]
-  path = src/ciphermind
-  url = https://oauth2:${GH_TOKEN}@github.com/fifolio/ciphermind.git
