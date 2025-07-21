@@ -1,3 +1,0 @@
-[submodule "src/ciphermind"]
-	path = src/ciphermind
-	url = git@github.com:fifolio/ciphermind.git
