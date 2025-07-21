@@ -16,11 +16,14 @@ export async function login({ email, password }: Login) {
         // Step 3: Check and set defaults if needed
         const hasRPU = Object.prototype.hasOwnProperty.call(prefs, 'RPU');
         const hasMRPU = Object.prototype.hasOwnProperty.call(prefs, 'MRPU');
+        const resetDate = Object.prototype.hasOwnProperty.call(prefs, 'resetDate');
 
-        if (!hasRPU || !hasMRPU) {
+
+        if (!hasRPU || !hasMRPU || !resetDate) {
             await account.updatePrefs({
                 RPU: hasRPU ? prefs.RPU : 0,
                 MRPU: hasMRPU ? prefs.MRPU : 50,
+                resetDate: resetDate ? prefs.resetDate : 'null'
             });
         }
 

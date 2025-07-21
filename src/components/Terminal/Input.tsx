@@ -4,6 +4,12 @@ import { details, guests_help, users_help, whoami } from "../../commands";
 import { useNavigate } from "react-router";
 import { logout } from "../../apis/backend/auth/logout";
 
+// import runMarketInsights from "../../../ciphermind/algorithms/market_insights/runMarketInsights";
+// import { GET_insights } from "../../apis";
+// import incrementRPU from "../../apis/backend/userPrefs/incrementRPU";
+
+import { PRUxMRPU_handler } from "../../../ciphermind/lib/RPUxMRPU_handler";
+
 
 const Input = forwardRef<HTMLInputElement>((_, ref) => {
 
@@ -17,7 +23,11 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
 
   const navigate = useNavigate();
 
-  function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+
+  async function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key !== "Enter") return;
+
+    if (input.trim() === '') return;
 
     function metaData() {
       const time = new Date().toLocaleTimeString();
@@ -27,19 +37,18 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
       return { time, date, promptId, responseId }
     }
 
+    if (event.ctrlKey && event.key.toLowerCase() === "c") {
+      return;
+    }
+
     if (input.trim() === "atm clear") {
       setHistory([]);
       setInput("");
       return;
     }
 
-    if (event.ctrlKey && event.key.toLowerCase() === "c") {
-      return;
-    }
-
-    if (input.trim() === '') return;
-
     if (input.trim() === 'atm help') {
+
       addEntry(
         {
           id: metaData().promptId,
@@ -138,7 +147,8 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
                   timeZoneName: 'short'
                 }),
                 userData.prefs.RPU,
-                userData.prefs.MRPU),
+                userData.prefs.MRPU,
+                userData.prefs.resetDate),
             }
             ]
         }
@@ -188,6 +198,65 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
       }
     }
 
+    if (input.trim() === 'atm get insights') {
+      if (userData == null) return;
+
+
+      PRUxMRPU_handler()
+        .then(() => {
+          console.log('User Data should be updated');
+        })
+      // // If getMarketInsights is true, fetch market insights
+      // if (getMarketInsights) {
+      //   console.log('Fetching market insights...');
+      // }
+
+
+      // Get today's date in YYYY-MM-DD format
+      // function getTodayDate() {
+      //   const today = new Date();
+      //   const year = today.getFullYear();
+      //   const month = String(today.getMonth() + 1).padStart(2, '0');
+      //   const day = String(today.getDate()).padStart(2, '0');
+      //   return `${year}-${month}-${day}`;
+      // }
+
+      // // Check on database if insights for today are available
+      // async function checkInsights() {
+      //   const res = await GET_insights(getTodayDate());
+      //   return res
+      // }
+
+      // checkInsights().then((res) => {
+      //   if (res && typeof res !== 'boolean' && res.documents.length === 0) {
+      //     console.log('theres no insights for today');
+      //   } else {
+      //     addEntry(
+      //       {
+      //         id: metaData().promptId,
+      //         timestamp: metaData().time,
+      //         date: metaData().date,
+      //         user: {
+      //           email: userData.email,
+      //           RPU: userData.prefs?.RPU,
+      //           MRPU: userData.prefs?.MRPU,
+      //         },
+      //         prompt: {
+      //           text: input,
+      //         },
+      //         response:
+      //           [{
+      //             id: metaData().responseId,
+      //             timestamp: metaData().time,
+      //             content: market_insights(res),
+      //           }
+      //           ]
+      //       }
+      //     );
+      //   }
+      // })
+    }
+
   }
 
   useEffect(() => {
@@ -198,7 +267,7 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
     }
   }, [])
 
-  
+
   if (isLoggedin === undefined || isLoading) return (
     <div className="flex space-x-1">
       <div className="text-green-400">Please wait</div>

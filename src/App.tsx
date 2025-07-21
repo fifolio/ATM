@@ -9,7 +9,7 @@ import useHeader from "./stores/header/useHeader";
 export default function App() {
 
   const { setIsLoggedin, setUserId } = useUser();
-  const { setUserData } = useUserData();
+  const { setUserData, updateUserData } = useUserData();
   const { setDisplayHelpContext } = useHeader();
 
   // Check if there's an active session
@@ -50,7 +50,7 @@ export default function App() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [updateUserData]);
 
 
   return (

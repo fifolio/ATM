@@ -7,7 +7,7 @@ function guests_help() {
             atm login    - Log into your account
             atm signup   - Create a new user account
             atm reset p  - Reset your account password  
-            atm guide    - How to use the system
+            atm guide    - How to use automission.ai system
             atm readme   - Learn more about this project
         `
     )
