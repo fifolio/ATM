@@ -8,7 +8,7 @@ import { logout } from "../../apis/backend/auth/logout";
 // import { GET_insights } from "../../apis";
 // import incrementRPU from "../../apis/backend/userPrefs/incrementRPU";
 
-import { PRUxMRPU_handler } from "../../ciphermind/lib/RPUxMRPU_handler";
+import { PRUxMRPU_handler } from "../../algos";
 
 
 const Input = forwardRef<HTMLInputElement>((_, ref) => {
