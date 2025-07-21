@@ -1,6 +1,6 @@
-import areRPUandMRPUEqual from "../../../src/apis/backend/userPrefs/areRPUandMRPUEqual";
-import incrementRPU from "../../../src/apis/backend/userPrefs/incrementRPU";
-import { useUserData } from "../../../src/stores";
+import areRPUandMRPUEqual from "../../src/apis/backend/userPrefs/areRPUandMRPUEqual";
+import incrementRPU from "../../src/apis/backend/userPrefs/incrementRPU";
+import { useUserData } from "../../src/stores";
 
 
 export async function PRUxMRPU_handler() {
