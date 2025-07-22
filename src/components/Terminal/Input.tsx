@@ -1,6 +1,6 @@
 import { useState, forwardRef, useEffect } from "react";
 import { useHistory, useLoading, useLogin, useSignup, useUser, useUserData } from "../../stores";
-import { details, guests_help, users_help, whoami } from "../../commands";
+import { details, guests_help, limitWarning, users_help, whoami } from "../../commands";
 import { useNavigate } from "react-router";
 import { logout } from "../../apis/backend/auth/logout";
 
@@ -198,14 +198,41 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
       }
     }
 
-    if (input.trim() === 'atm get insights') {
+    if (input.trim() === 'atm predict insights') {
       if (userData == null) return;
-
+      setIsLoading(true);
 
       PRUxMRPU_handler()
-        .then(() => {
-          console.log('User Data should be updated');
+        .then(async (res) => {
+          if (res === 'limitWarning') {
+            addEntry(
+              {
+                id: metaData().promptId,
+                timestamp: metaData().time,
+                date: metaData().date,
+                user: {
+                  email: userData.email,
+                  RPU: userData.prefs?.RPU,
+                  MRPU: userData.prefs?.MRPU,
+                },
+                prompt: {
+                  text: input,
+                },
+                response:
+                  [{
+                    id: metaData().responseId,
+                    timestamp: metaData().time,
+                    content: await limitWarning(),
+                  }
+                  ]
+              }
+            );
+            setInput(""); // Clear the input after adding the entry
+          }
+        }).finally(() => {
+          setIsLoading(false);
         })
+
       // // If getMarketInsights is true, fetch market insights
       // if (getMarketInsights) {
       //   console.log('Fetching market insights...');

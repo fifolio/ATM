@@ -9,7 +9,7 @@ function users_help() {
             atm details  - Display your account details
             atm guide    - How to use automission.ai system
             atm readme   - Learn more about this project 
-            atm get insights  - Get high-level crypto market insights [Costs 1 RPU]
+            atm predict insights  - Get high-level crypto market insights with future forecasts [Costs 1 RPU]
 
             -
             Note: Some commands deducts some points of your RPU per request.
