@@ -19,7 +19,7 @@ function details(
             USAGE 
               Requests Used (RPU)         : ${RPU}
               Max Requests Allowed (MRPU) : ${MRPU}
-              Reset Date                  : ${resetDate}
+              Auto Reset Date             : ${resetDate}
         `
   )
 }

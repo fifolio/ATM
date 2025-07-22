@@ -12,7 +12,7 @@ export async function areRPUandMRPUEqual() {
             const firstOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
             const year = firstOfNextMonth.getFullYear();
             const month = String(firstOfNextMonth.getMonth() + 1).padStart(2, '0');
-            const resetDate = `${year}-${month}`;
+            const resetDate = `${year}-${month}-01`;
 
             await account.updatePrefs({ ...prefs, resetDate });
             return 'equal';

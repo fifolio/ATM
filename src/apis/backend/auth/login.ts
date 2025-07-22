@@ -23,8 +23,16 @@ export async function login({ email, password }: Login) {
         const firstOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
         const year = firstOfNextMonth.getFullYear();
         const month = String(firstOfNextMonth.getMonth() + 1).padStart(2, '0');
-        const nextMonthDate = `${year}-${month}`;
+        const nextMonthDate = `${year}-${month}-01`;
 
+        // Step 5: Auto reset RPU if resetDate is in the past
+        const todayStr = now.toISOString().slice(0, 10); // Get current date as 'YYYY-MM-DD'
+        if (prefs.resetDate && prefs.resetDate <= todayStr) {
+            await account.updatePrefs({
+                RPU: 0,
+                resetDate: nextMonthDate
+            });
+        }
 
         if (!hasRPU || !hasMRPU || !resetDate) {
             await account.updatePrefs({
@@ -33,6 +41,8 @@ export async function login({ email, password }: Login) {
                 resetDate: resetDate ? prefs.resetDate : nextMonthDate
             });
         }
+
+        console.log(todayStr)
 
         return {
             success: true,
