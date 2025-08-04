@@ -42,8 +42,6 @@ export async function login({ email, password }: Login) {
             });
         }
 
-        console.log(todayStr)
-
         return {
             success: true,
             data: res,

@@ -4,11 +4,10 @@ import { details, guests_help, limitWarning, users_help, whoami } from "../../co
 import { useNavigate } from "react-router";
 import { logout } from "../../apis/backend/auth/logout";
 
-// import runMarketInsights from "../../../ciphermind/algorithms/market_insights/runMarketInsights";
 // import { GET_insights } from "../../apis";
 // import incrementRPU from "../../apis/backend/userPrefs/incrementRPU";
 
-import { PRUxMRPU_handler } from "../../algos";
+import { PRUxMRPU_handler, runMarketInsights } from "../../algos";
 
 
 const Input = forwardRef<HTMLInputElement>((_, ref) => {
@@ -228,12 +227,14 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
               }
             );
             setInput(""); // Clear the input after adding the entry
+          } else if (res === true) {
+            runMarketInsights();
           }
         }).finally(() => {
           setIsLoading(false);
         })
 
-      // // If getMarketInsights is true, fetch market insights
+      // If getMarketInsights is true, fetch market insights
       // if (getMarketInsights) {
       //   console.log('Fetching market insights...');
       // }
