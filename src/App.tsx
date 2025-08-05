@@ -4,6 +4,7 @@ import { useUser, useUserData } from "./stores";
 import { checkSession, userData } from "./apis";
 import MainLayout from "./layouts/MainLayout";
 import useHeader from "./stores/header/useHeader";
+import areRPUandMRPUEqual from "./apis/backend/userPrefs/areRPUandMRPUEqual";
 
 
 export default function App() {
@@ -23,6 +24,8 @@ export default function App() {
       try {
         const response = await checkSession();
         setUserId(response && typeof response.userId === "string" ? response.userId : null)
+        // Fetch the recent information related to user's PRU and MRPU 
+        areRPUandMRPUEqual();
         setIsLoggedin(true);
       } catch (error) {
         console.error("Error checking session:", error);
@@ -41,6 +44,8 @@ export default function App() {
     async function getUserData() {
       const response = await userData();
       if (response && isMounted) {
+        // Fetch the recent information related to user's PRU and MRPU 
+        areRPUandMRPUEqual();
         setUserData(response);
       }
     }

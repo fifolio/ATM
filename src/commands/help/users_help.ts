@@ -8,7 +8,7 @@ function users_help() {
             atm whoami   - Display current username and email
             atm details  - Display your account details
             atm guide    - How to use automission.ai system
-            atm readme   - Learn more about this project 
+            atm whitepaper   - Learn more about this project 
             atm predict insights  - Get high-level crypto market insights with future forecasts [Costs 1 RPU]
 
             -

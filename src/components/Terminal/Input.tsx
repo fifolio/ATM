@@ -7,7 +7,7 @@ import { logout } from "../../apis/backend/auth/logout";
 // import { GET_insights } from "../../apis";
 // import incrementRPU from "../../apis/backend/userPrefs/incrementRPU";
 
-import { PRUxMRPU_handler, runMarketInsights } from "../../algos";
+import { PRUxMRPU_handler, runMarketInsights } from "../../x";
 
 
 const Input = forwardRef<HTMLInputElement>((_, ref) => {
@@ -228,7 +228,8 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
             );
             setInput(""); // Clear the input after adding the entry
           } else if (res === true) {
-            runMarketInsights();
+            console.log('run market insights...')
+            // runMarketInsights();
           }
         }).finally(() => {
           setIsLoading(false);

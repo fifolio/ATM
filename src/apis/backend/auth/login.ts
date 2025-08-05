@@ -37,7 +37,7 @@ export async function login({ email, password }: Login) {
         if (!hasRPU || !hasMRPU || !resetDate) {
             await account.updatePrefs({
                 RPU: hasRPU ? prefs.RPU : 0,
-                MRPU: hasMRPU ? prefs.MRPU : 50,
+                MRPU: hasMRPU ? prefs.MRPU : 30,
                 resetDate: resetDate ? prefs.resetDate : nextMonthDate
             });
         }
