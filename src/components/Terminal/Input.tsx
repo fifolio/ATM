@@ -229,6 +229,8 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
               }
             );
             setInput(""); // Clear the input after adding the entry
+            setIsLoading(false);
+            return;
           } else if (res === true) {
             runMarketInsights().then(async (res) => {
               addEntry(
@@ -258,7 +260,7 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
                         second: '2-digit',
                         hour12: true,
                       }),
-                      content: await command_response_market_insights({
+                      content: command_response_market_insights({
                         date: res.date,
                         market_cap_usd: res.market_cap_usd,
                         volume_usd: res.volume_usd,
