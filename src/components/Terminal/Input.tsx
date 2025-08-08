@@ -1,6 +1,6 @@
 import { useState, forwardRef, useEffect } from "react";
 import { useHistory, useLoading, useLogin, useSignup, useUser, useUserData } from "../../stores";
-import { command_response_details, command_response_guests_help, command_response_limitWarning, command_response_market_insights, command_response_users_help, command_response_whoami } from "../../commands";
+import { command_response_bulls, command_response_details, command_response_guests_help, command_response_limitWarning, command_response_market_insights, command_response_users_help, command_response_whoami } from "../../commands";
 import { useNavigate } from "react-router";
 import { logout } from "../../apis/backend/auth/logout";
 import { PRUxMRPU_handler, runMarketInsights } from "../../x";
@@ -15,28 +15,28 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
   const [input, setInput] = useState<string>("");
   const { addEntry, setHistory } = useHistory();
 
+
   const navigate = useNavigate();
 
+  // Helper function to get metadata with a fresh timestamp
+  const getMetaData = () => {
+    const now = new Date();
+    const time = now.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true,
+    });
+    const date = now.toDateString();
+    const promptId = Math.floor(Math.random() * 1000000);
+    const responseId = Math.floor(Math.random() * 1000000);
+    return { time, date, promptId, responseId };
+  }
 
   async function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key !== "Enter") return;
 
     if (input.trim() === '') return;
-
-    function metaData() {
-      const now = new Date();
-      const time = now.toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true,
-      });
-      const date = now.toDateString();
-      const promptId = Math.floor(Math.random() * 1000000);
-      const responseId = Math.floor(Math.random() * 1000000);
-      return { time, date, promptId, responseId };
-    }
-
 
     if (event.ctrlKey && event.key.toLowerCase() === "c") {
       return;
@@ -48,13 +48,16 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
       return;
     }
 
-    if (input.trim() === 'atm help') {
+    // Capture metadata for the prompt right when the user hits Enter
+    const promptMetaData = getMetaData();
 
+    if (input.trim() === 'atm help') {
+      const responseMetaData = getMetaData(); // Get new timestamp for response
       addEntry(
         {
-          id: metaData().promptId,
-          timestamp: metaData().time,
-          date: metaData().date,
+          id: promptMetaData.promptId,
+          timestamp: promptMetaData.time,
+          date: promptMetaData.date,
           user: {
             email: userData?.email || '',
             RPU: userData?.prefs?.RPU || 0,
@@ -65,25 +68,25 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
           },
           response:
             [{
-              id: metaData().responseId,
-              timestamp: metaData().time,
+              id: responseMetaData.responseId,
+              timestamp: responseMetaData.time,
               content: userData !== null ? command_response_users_help() : command_response_guests_help(),
             }
             ]
         }
       );
-
       setInput(""); // Clear the input after adding the entry
+      return;
     }
 
     if (input.trim() === 'atm whoami') {
       if (userData == null) return;
-
+      const responseMetaData = getMetaData(); // Get new timestamp for response
       addEntry(
         {
-          id: metaData().promptId,
-          timestamp: metaData().time,
-          date: metaData().date,
+          id: promptMetaData.promptId,
+          timestamp: promptMetaData.time,
+          date: promptMetaData.date,
           user: {
             email: userData.email,
             RPU: userData.prefs?.RPU,
@@ -94,25 +97,25 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
           },
           response:
             [{
-              id: metaData().responseId,
-              timestamp: metaData().time,
+              id: responseMetaData.responseId,
+              timestamp: responseMetaData.time,
               content: command_response_whoami(userData.name, userData.email),
             }
             ]
         }
       );
-
       setInput(""); // Clear the input after adding the entry
+      return;
     }
 
     if (input.trim() === 'atm details') {
       if (userData == null) return;
-
+      const responseMetaData = getMetaData(); // Get new timestamp for response
       addEntry(
         {
-          id: metaData().promptId,
-          timestamp: metaData().time,
-          date: metaData().date,
+          id: promptMetaData.promptId,
+          timestamp: promptMetaData.time,
+          date: promptMetaData.date,
           user: {
             email: userData.email,
             RPU: userData.prefs?.RPU,
@@ -123,8 +126,8 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
           },
           response:
             [{
-              id: metaData().responseId,
-              timestamp: metaData().time,
+              id: responseMetaData.responseId,
+              timestamp: responseMetaData.time,
               content: command_response_details(
                 userData.name,
                 userData.email,
@@ -156,6 +159,7 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
       );
 
       setInput(""); // Clear the input after adding the entry
+      return;
     }
 
     if (input.trim() === 'atm signup') {
@@ -163,6 +167,7 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
 
       setSignupStep(0);
       setInput(""); // Clear the input after
+      return;
     }
 
     if (input.trim() === 'atm login') {
@@ -170,6 +175,7 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
 
       setLoginStep(0);
       setInput(""); // Clear the input after
+      return;
     }
 
     if (input.trim() === 'atm reset p') {
@@ -193,6 +199,7 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
         }
         handleLogout()
         setInput(""); // Clear the input after
+        return;
       } else {
         setIsLoading(false)
         return
@@ -201,16 +208,16 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
 
     if (input.trim() === 'atm predict insights') {
       if (userData == null) return;
+      const responseMetaData = getMetaData(); // Get new timestamp for response
       setIsLoading(true);
-
       PRUxMRPU_handler()
         .then(async (res) => {
           if (res === 'limitWarning') {
             addEntry(
               {
-                id: metaData().promptId,
-                timestamp: metaData().time,
-                date: metaData().date,
+                id: promptMetaData.promptId,
+                timestamp: promptMetaData.time,
+                date: promptMetaData.date,
                 user: {
                   email: userData.email,
                   RPU: userData.prefs?.RPU,
@@ -221,8 +228,8 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
                 },
                 response:
                   [{
-                    id: metaData().responseId,
-                    timestamp: metaData().time,
+                    id: responseMetaData.responseId,
+                    timestamp: responseMetaData.time,
                     content: await command_response_limitWarning(),
                   }
                   ]
@@ -233,16 +240,12 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
             return;
           } else if (res === true) {
             runMarketInsights().then(async (res) => {
+              const responseMetaData = getMetaData(); // Get new timestamp for response
               addEntry(
                 {
-                  id: metaData().promptId,
-                  timestamp: new Date().toLocaleTimeString('en-US', {
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    hour12: true,
-                  }),
-                  date: metaData().date,
+                  id: promptMetaData.promptId,
+                  timestamp: promptMetaData.time,
+                  date: promptMetaData.date,
                   user: {
                     email: userData.email,
                     RPU: userData.prefs?.RPU,
@@ -253,13 +256,8 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
                   },
                   response:
                     [{
-                      id: metaData().responseId,
-                      timestamp: new Date().toLocaleTimeString('en-US', {
-                        hour: 'numeric',
-                        minute: '2-digit',
-                        second: '2-digit',
-                        hour12: true,
-                      }),
+                      id: responseMetaData.responseId,
+                      timestamp: responseMetaData.time,
                       content: command_response_market_insights({
                         date: res.date,
                         market_cap_usd: res.market_cap_usd,
@@ -287,12 +285,80 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
             }).finally(() => {
               setInput(""); // Clear the input after adding the entry
               setIsLoading(false);
+              return;
             });
           }
         })
 
     }
 
+    if (input.trim() === 'atm predict bulls') {
+      if (userData == null) return;
+      const responseMetaData = getMetaData(); // Get new timestamp for response
+      setIsLoading(true);
+      PRUxMRPU_handler()
+        .then(async (res) => {
+          if (res === 'limitWarning') {
+            addEntry(
+              {
+                id: promptMetaData.promptId,
+                timestamp: promptMetaData.time,
+                date: promptMetaData.date,
+                user: {
+                  email: userData.email,
+                  RPU: userData.prefs?.RPU,
+                  MRPU: userData.prefs?.MRPU,
+                },
+                prompt: {
+                  text: input,
+                },
+                response:
+                  [{
+                    id: responseMetaData.responseId,
+                    timestamp: responseMetaData.time,
+                    content: await command_response_limitWarning(),
+                  }
+                  ]
+              }
+            );
+            setInput(""); // Clear the input after adding the entry
+            setIsLoading(false);
+            return;
+          } else if (res === true) {
+            runMarketInsights().then(() => {
+              const responseMetaData = getMetaData(); // Get new timestamp for response
+              addEntry(
+                {
+                  id: promptMetaData.promptId,
+                  timestamp: promptMetaData.time,
+                  date: promptMetaData.date,
+                  user: {
+                    email: userData.email,
+                    RPU: userData.prefs?.RPU,
+                    MRPU: userData.prefs?.MRPU,
+                  },
+                  prompt: {
+                    text: input,
+                  },
+                  response:
+                    [{
+                      id: responseMetaData.responseId,
+                      timestamp: responseMetaData.time,
+                      content: command_response_bulls(),
+                    }
+                    ]
+                }
+              );
+            }, (err) => {
+              console.error(err);
+            }).finally(() => {
+              setInput(""); // Clear the input after adding the entry
+              setIsLoading(false);
+              return;
+            });
+          }
+        });
+    }
   }
 
   useEffect(() => {

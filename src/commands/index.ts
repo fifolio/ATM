@@ -4,4 +4,5 @@ export { default as command_response_users_help } from './help/command_response_
 export { default as command_response_whoami } from './whoami/command_response_whoami';
 export { default as command_response_details } from './details/command_response_details';
 export { default as command_response_limitWarning } from './limitWarning/command_response_limitWarning';
-export { default as command_response_market_insights } from './marketInsights/command_response_market_insights';
+export { default as command_response_market_insights } from './predictions/marketInsights/command_response_market_insights';
+export { default as command_response_bulls } from './predictions/marketBulls/command_response_bulls';
