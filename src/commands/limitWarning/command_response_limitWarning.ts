@@ -1,6 +1,6 @@
 import { account } from "../../apis/backend/configs/configs";
 
-async function limitWarning() {
+async function command_response_limitWarning() {
 
     const prefs = await account.getPrefs();
 
@@ -20,4 +20,4 @@ async function limitWarning() {
     )
 }
 
-export default limitWarning;
+export default command_response_limitWarning;

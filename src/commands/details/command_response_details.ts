@@ -1,4 +1,4 @@
-function details(
+function command_response_details(
   username: string,
   email: string,
   emailState: boolean,
@@ -24,4 +24,4 @@ function details(
   )
 }
 
-export default details;
+export default command_response_details;

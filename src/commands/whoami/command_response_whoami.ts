@@ -1,4 +1,4 @@
-function whoami(username: string, email: string) {
+function command_response_whoami(username: string, email: string) {
     return (
         `
             You are currently logged in as:
@@ -9,4 +9,4 @@ function whoami(username: string, email: string) {
     )
 }
 
-export default whoami;
+export default command_response_whoami;

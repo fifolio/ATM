@@ -1,4 +1,4 @@
-function signupSteps() {
+function command_response_signupSteps() {
   return [
     {
       welcome: `
@@ -21,4 +21,4 @@ function signupSteps() {
   ];
 }
 
-export default signupSteps;
+export default command_response_signupSteps;

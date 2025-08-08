@@ -1,4 +1,4 @@
-function guests_help() {
+function command_response_guests_help() {
     return (
            `
             Available commands:
@@ -8,9 +8,9 @@ function guests_help() {
             atm signup   - Create a new user account
             atm reset p  - Reset your account password  
             atm guide    - How to use automission.ai system
-            atm readme   - Learn more about this project
+            atm whitepaper   - Learn more about this project
         `
     )
 } 
 
-export default guests_help;
+export default command_response_guests_help;

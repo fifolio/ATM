@@ -1,4 +1,4 @@
-function users_help() {
+function command_response_users_help() {
     return (
         `
             Available commands:
@@ -18,4 +18,4 @@ function users_help() {
     )
 }
 
-export default users_help;
+export default command_response_users_help;

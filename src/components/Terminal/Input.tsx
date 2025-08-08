@@ -1,14 +1,9 @@
 import { useState, forwardRef, useEffect } from "react";
 import { useHistory, useLoading, useLogin, useSignup, useUser, useUserData } from "../../stores";
-import { details, guests_help, limitWarning, users_help, whoami } from "../../commands";
+import { command_response_details, command_response_guests_help, command_response_limitWarning, command_response_market_insights, command_response_users_help, command_response_whoami } from "../../commands";
 import { useNavigate } from "react-router";
 import { logout } from "../../apis/backend/auth/logout";
-
-// import { GET_insights } from "../../apis";
-// import incrementRPU from "../../apis/backend/userPrefs/incrementRPU";
-
 import { PRUxMRPU_handler, runMarketInsights } from "../../x";
-
 
 const Input = forwardRef<HTMLInputElement>((_, ref) => {
 
@@ -29,12 +24,19 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
     if (input.trim() === '') return;
 
     function metaData() {
-      const time = new Date().toLocaleTimeString();
-      const date = new Date().toDateString();
+      const now = new Date();
+      const time = now.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+      });
+      const date = now.toDateString();
       const promptId = Math.floor(Math.random() * 1000000);
       const responseId = Math.floor(Math.random() * 1000000);
-      return { time, date, promptId, responseId }
+      return { time, date, promptId, responseId };
     }
+
 
     if (event.ctrlKey && event.key.toLowerCase() === "c") {
       return;
@@ -65,7 +67,7 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
             [{
               id: metaData().responseId,
               timestamp: metaData().time,
-              content: userData !== null ? users_help() : guests_help(),
+              content: userData !== null ? command_response_users_help() : command_response_guests_help(),
             }
             ]
         }
@@ -94,7 +96,7 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
             [{
               id: metaData().responseId,
               timestamp: metaData().time,
-              content: whoami(userData.name, userData.email),
+              content: command_response_whoami(userData.name, userData.email),
             }
             ]
         }
@@ -123,7 +125,7 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
             [{
               id: metaData().responseId,
               timestamp: metaData().time,
-              content: details(
+              content: command_response_details(
                 userData.name,
                 userData.email,
                 userData.emailVerification,
@@ -221,69 +223,72 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
                   [{
                     id: metaData().responseId,
                     timestamp: metaData().time,
-                    content: await limitWarning(),
+                    content: await command_response_limitWarning(),
                   }
                   ]
               }
             );
             setInput(""); // Clear the input after adding the entry
           } else if (res === true) {
-            console.log('run market insights...')
-            // runMarketInsights();
+            runMarketInsights().then(async (res) => {
+              addEntry(
+                {
+                  id: metaData().promptId,
+                  timestamp: new Date().toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true,
+                  }),
+                  date: metaData().date,
+                  user: {
+                    email: userData.email,
+                    RPU: userData.prefs?.RPU,
+                    MRPU: userData.prefs?.MRPU,
+                  },
+                  prompt: {
+                    text: input,
+                  },
+                  response:
+                    [{
+                      id: metaData().responseId,
+                      timestamp: new Date().toLocaleTimeString('en-US', {
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: true,
+                      }),
+                      content: await command_response_market_insights({
+                        date: res.date,
+                        market_cap_usd: res.market_cap_usd,
+                        volume_usd: res.volume_usd,
+                        btc_dominance: res.btc_dominance,
+                        sentiment_score: res.sentiment_score,
+                        sentiment_classification: res.sentiment_classification,
+                        bitcoin_price_USD: res.bitcoin_price_USD,
+                        previous_bitcoin_price_USD: res.previous_bitcoin_price_USD,
+                        active_cryptocurrencies: res.active_cryptocurrencies,
+                        active_markets: res.active_markets,
+                        trend_overall_market_trend: res.trend_overall_market_trend,
+                        trend_dominance_influence: res.trend_dominance_influence,
+                        market_direction_current_direction: res.market_direction_current_direction,
+                        market_direction_justification: res.market_direction_justification,
+                        signal_strength_strength_evaluation: res.signal_strength_strength_evaluation,
+                        signal_strength_classification: res.sentiment_classification
+                      }),
+                    }
+                    ]
+                }
+              );
+            }, (err) => {
+              console.error(err);
+            }).finally(() => {
+              setInput(""); // Clear the input after adding the entry
+              setIsLoading(false);
+            });
           }
-        }).finally(() => {
-          setIsLoading(false);
         })
 
-      // If getMarketInsights is true, fetch market insights
-      // if (getMarketInsights) {
-      //   console.log('Fetching market insights...');
-      // }
-
-
-      // Get today's date in YYYY-MM-DD format
-      // function getTodayDate() {
-      //   const today = new Date();
-      //   const year = today.getFullYear();
-      //   const month = String(today.getMonth() + 1).padStart(2, '0');
-      //   const day = String(today.getDate()).padStart(2, '0');
-      //   return `${year}-${month}-${day}`;
-      // }
-
-      // // Check on database if insights for today are available
-      // async function checkInsights() {
-      //   const res = await GET_insights(getTodayDate());
-      //   return res
-      // }
-
-      // checkInsights().then((res) => {
-      //   if (res && typeof res !== 'boolean' && res.documents.length === 0) {
-      //     console.log('theres no insights for today');
-      //   } else {
-      //     addEntry(
-      //       {
-      //         id: metaData().promptId,
-      //         timestamp: metaData().time,
-      //         date: metaData().date,
-      //         user: {
-      //           email: userData.email,
-      //           RPU: userData.prefs?.RPU,
-      //           MRPU: userData.prefs?.MRPU,
-      //         },
-      //         prompt: {
-      //           text: input,
-      //         },
-      //         response:
-      //           [{
-      //             id: metaData().responseId,
-      //             timestamp: metaData().time,
-      //             content: market_insights(res),
-      //           }
-      //           ]
-      //       }
-      //     );
-      //   }
-      // })
     }
 
   }
