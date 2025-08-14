@@ -1,5 +1,5 @@
 import { Query, type Models } from "appwrite";
-import { databases } from "../../configs/configs";
+import { databases } from "../../../configs/configs";
 
 // This function retrieves today's market insights from the database
 async function GET_insights(date: string): Promise<false | Models.DocumentList<Models.Document>> {

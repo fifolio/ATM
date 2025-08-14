@@ -1,9 +1,16 @@
 import { useState, forwardRef, useEffect } from "react";
 import { useHistory, useLoading, useLogin, useSignup, useUser, useUserData } from "../../stores";
-import { command_response_bulls, command_response_details, command_response_guests_help, command_response_limitWarning, command_response_market_insights, command_response_users_help, command_response_whoami } from "../../commands";
+import { 
+  command_response_atm_predict_bulls, 
+  command_response_details, 
+  command_response_guests_help, 
+  command_response_limitWarning, 
+  command_response_atm_predict_insights, 
+  command_response_users_help, 
+  command_response_whoami } from "../../commands";
 import { useNavigate } from "react-router";
 import { logout } from "../../apis/backend/auth/logout";
-import { PRUxMRPU_handler, runMarketInsights } from "../../x";
+import { PRUxMRPU_handler, runMarketBulls, runMarketInsights } from "../../x";
 
 const Input = forwardRef<HTMLInputElement>((_, ref) => {
 
@@ -258,7 +265,7 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
                     [{
                       id: responseMetaData.responseId,
                       timestamp: responseMetaData.time,
-                      content: command_response_market_insights({
+                      content: command_response_atm_predict_insights({
                         date: res.date,
                         market_cap_usd: res.market_cap_usd,
                         volume_usd: res.volume_usd,
@@ -317,15 +324,14 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
                     id: responseMetaData.responseId,
                     timestamp: responseMetaData.time,
                     content: await command_response_limitWarning(),
-                  }
-                  ]
+                  }]
               }
             );
             setInput(""); // Clear the input after adding the entry
             setIsLoading(false);
             return;
           } else if (res === true) {
-            runMarketInsights().then(() => {
+            runMarketBulls().then((res) => {
               const responseMetaData = getMetaData(); // Get new timestamp for response
               addEntry(
                 {
@@ -344,9 +350,8 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
                     [{
                       id: responseMetaData.responseId,
                       timestamp: responseMetaData.time,
-                      content: command_response_bulls(),
-                    }
-                    ]
+                      content: command_response_atm_predict_bulls(res),
+                    }]
                 }
               );
             }, (err) => {

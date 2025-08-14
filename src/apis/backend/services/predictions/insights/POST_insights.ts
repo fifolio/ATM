@@ -1,4 +1,4 @@
-import { databases, ID } from "../../configs/configs";
+import { databases, ID } from "../../../configs/configs";
 
 interface MarketInsightsData {
     date: string;
@@ -27,7 +27,7 @@ interface MarketInsightsData {
 }
 
 
-// This function retrieves today's market insights from the database
+// This function creates today's market insights from the database
 async function POST_insights(data: MarketInsightsData) {
     try {
         const results = await databases.createDocument(

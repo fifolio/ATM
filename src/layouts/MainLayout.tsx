@@ -79,7 +79,10 @@ export default function MainLayout({ route }: Props) {
                     <div key={resIndex} className="text-white ml-4">
                       <div>
                         <span className="font-bold">➜({res.timestamp}):</span>
-                        <pre className="-mt-5 ml-2 whitespace-pre-wrap">{res.content}</pre>
+                        <div className="overflow-auto max-w-full scrollbar-hide">
+                          <pre className="-mt-5 ml-2 w-fit">{res.content}</pre>
+                        </div>
+
                       </div>
                     </div>
                   ))}
