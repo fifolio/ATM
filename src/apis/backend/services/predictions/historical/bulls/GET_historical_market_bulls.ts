@@ -1,5 +1,5 @@
 import { Query, type Models } from "appwrite";
-import { databases } from "../../../configs/configs";
+import { databases } from "../../../../configs/configs";
 
 // This function retrieves today's historical market bulls from db
 async function GET_historical_market_bulls(date: string): Promise<false | Models.DocumentList<Models.Document>> {

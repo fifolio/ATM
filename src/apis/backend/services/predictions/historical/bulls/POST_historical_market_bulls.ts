@@ -1,4 +1,4 @@
-import { databases, ID } from "../../../configs/configs";
+import { databases, ID } from "../../../../configs/configs";
 
 interface HistoricalMarketBulls {
     date: string;

@@ -6,3 +6,4 @@ export { default as command_response_details } from './details/command_response_
 export { default as command_response_limitWarning } from './limitWarning/command_response_limitWarning';
 export { default as command_response_atm_predict_insights } from './predictions/marketInsights/command_response_atm_predict_insights';
 export { default as command_response_atm_predict_bulls } from './predictions/marketBulls/command_response_atm_predict_bulls';
+export { default as command_response_atm_predict_bears } from './predictions/marketBears/command_response_atm_predict_bears';
