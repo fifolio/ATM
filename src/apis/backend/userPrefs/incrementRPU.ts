@@ -1,6 +1,6 @@
 import { account } from "../configs/configs";
 
-export async function incrementRPU() {
+export async function incrementRPU(incrementValue?: number) {
     try {
         // Step 1: Fetch current preferences
         const prefs = await account.getPrefs();
@@ -11,7 +11,7 @@ export async function incrementRPU() {
         // Step 3: Update RPU by incrementing by 1
         await account.updatePrefs({
             ...prefs,
-            RPU: currentRPU + 1,
+            RPU: currentRPU + (incrementValue !== undefined ? incrementValue : 1),
         });
 
         return true;
