@@ -8,3 +8,4 @@ export { default as command_response_atm_predict_insights } from './predictions/
 export { default as command_response_atm_predict_bulls } from './predictions/marketBulls/command_response_atm_predict_bulls';
 export { default as command_response_atm_predict_bears } from './predictions/marketBears/command_response_atm_predict_bears';
 export { default as command_response_atm_best_long } from './signals/bestLong/command_response_atm_best_long';
+export { default as command_response_atm_best_short } from './signals/bestShort/command_response_atm_best_short';

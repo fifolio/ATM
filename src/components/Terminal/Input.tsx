@@ -9,11 +9,12 @@ import {
   command_response_users_help,
   command_response_whoami,
   command_response_atm_predict_bears,
-  command_response_atm_best_long
+  command_response_atm_best_long,
+  command_response_atm_best_short
 } from "../../commands";
 import { useNavigate } from "react-router";
 import { logout } from "../../apis/backend/auth/logout";
-import { PRUxMRPU_handler, runBestLong, runMarketBears, runMarketBulls, runMarketInsights } from "../../x";
+import { PRUxMRPU_handler, runBestLong, runBestShort, runMarketBears, runMarketBulls, runMarketInsights } from "../../x";
 
 
 const Input = forwardRef<HTMLInputElement>((_, ref) => {
@@ -486,6 +487,72 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
                       id: responseMetaData.responseId,
                       timestamp: responseMetaData.time,
                       content: command_response_atm_best_long(res),
+                    }]
+                }
+              );
+            }, (err) => {
+              console.error(err);
+            }).finally(() => {
+              setInput(""); // Clear the input after adding the entry
+              setIsLoading(false);
+              return;
+            });
+          }
+        });
+    }
+
+    if (input.trim() === 'atm best short') {
+      if (userData == null) return;
+      const responseMetaData = getMetaData(); // Get new timestamp for response
+      setIsLoading(true);
+      PRUxMRPU_handler(5)
+        .then(async (res) => {
+          if (res === 'limitWarning') {
+            addEntry(
+              {
+                id: promptMetaData.promptId,
+                timestamp: promptMetaData.time,
+                date: promptMetaData.date,
+                user: {
+                  email: userData.email,
+                  RPU: userData.prefs?.RPU,
+                  MRPU: userData.prefs?.MRPU,
+                },
+                prompt: {
+                  text: input,
+                },
+                response:
+                  [{
+                    id: responseMetaData.responseId,
+                    timestamp: responseMetaData.time,
+                    content: await command_response_limitWarning(),
+                  }]
+              }
+            );
+            setInput(""); // Clear the input after adding the entry
+            setIsLoading(false);
+            return;
+          } else if (res === true) {
+            runBestShort().then((res) => {
+              const responseMetaData = getMetaData(); // Get new timestamp for response
+              addEntry(
+                {
+                  id: promptMetaData.promptId,
+                  timestamp: promptMetaData.time,
+                  date: promptMetaData.date,
+                  user: {
+                    email: userData.email,
+                    RPU: userData.prefs?.RPU,
+                    MRPU: userData.prefs?.MRPU,
+                  },
+                  prompt: {
+                    text: input,
+                  },
+                  response:
+                    [{
+                      id: responseMetaData.responseId,
+                      timestamp: responseMetaData.time,
+                      content: command_response_atm_best_short(res),
                     }]
                 }
               );
