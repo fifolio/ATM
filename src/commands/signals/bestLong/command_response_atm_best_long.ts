@@ -24,7 +24,7 @@ function command_response_atm_best_long(
         table.push([
             index + 1,
             coin.coin,
-            coin.symbol,
+            coin.symbol.toUpperCase(),
             coin.market_sentiment,
             coin.reasoning,
             coin.signal_strength,
@@ -39,7 +39,7 @@ function command_response_atm_best_long(
 
     data.forEach((coin) => {
         forecastTable.push([
-            `💡 Use "atm forecast ${coin.symbol}" to activate Automission.ai’s analytical AI engine and get a complete market forecast — including optimal entry and exit price levels, suggested position duration, and detailed price movement insights — all designed to give you a sharper trading edge.`,
+            `💡 Type "atm forecast ${coin.symbol.toUpperCase()}" to activate Automission.ai’s analytical AI engine and get a complete market forecast — including optimal entry and exit price levels, suggested position duration, and detailed price movement insights — all designed to give you a sharper trading edge.`,
         ]);
     })
 

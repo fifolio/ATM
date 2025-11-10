@@ -113,7 +113,7 @@ export default function SignupStepsInfo() {
                     <div>
                         <div className="flex space-x-2 ml-2 font-semibold">
                             <span className="text-orange-400 flex items-center">
-                                Accept Automission Agreement Policies {signupUserData.acceptTerms === 'agree' && <ArrowRight className="ml-2" size={14} />}
+                                Accept Automission's (ATM) Agreement Policies {signupUserData.acceptTerms === 'agree' && <ArrowRight className="ml-2" size={14} />}
                             </span>
                             <span className="text-white">
                                 {signupUserData.acceptTerms === 'agree' && <span>✓ Agreed</span>}

@@ -1,20 +1,29 @@
 import { useState, forwardRef, useEffect } from "react";
 import { useHistory, useLoading, useLogin, useSignup, useUser, useUserData } from "../../stores";
 import {
-  command_response_atm_predict_bulls,
-  command_response_details,
   command_response_guests_help,
+  command_response_users_help,
+  command_response_details,
+  command_response_whoami,
   command_response_limitWarning,
   command_response_atm_predict_insights,
-  command_response_users_help,
-  command_response_whoami,
+  command_response_atm_predict_bulls,
   command_response_atm_predict_bears,
   command_response_atm_best_long,
-  command_response_atm_best_short
+  command_response_atm_best_short,
+  command_response_atm_forecast_coin
 } from "../../commands";
 import { useNavigate } from "react-router";
 import { logout } from "../../apis/backend/auth/logout";
-import { PRUxMRPU_handler, runBestLong, runBestShort, runMarketBears, runMarketBulls, runMarketInsights } from "../../x";
+import {
+  PRUxMRPU_handler,
+  runBestLong,
+  runBestShort,
+  runForecastCoin,
+  runMarketBears,
+  runMarketBulls,
+  runMarketInsights
+} from "../../x";
 
 
 const Input = forwardRef<HTMLInputElement>((_, ref) => {
@@ -53,7 +62,7 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
       return;
     }
 
-    if (input.trim() === "clear") {
+    if (input.trim() === "clear" || input.trim() === "atm clear") {
       setHistory([]);
       setInput("");
       return;
@@ -566,6 +575,72 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
           }
         });
     }
+
+    if (input.trim().startsWith('atm forecast')) {
+      if (userData == null) return;
+      const responseMetaData = getMetaData(); // Get new timestamp for response
+      setIsLoading(true);
+      PRUxMRPU_handler(5)
+        .then(async (res) => {
+          if (res === 'limitWarning') {
+            addEntry(
+              {
+                id: promptMetaData.promptId,
+                timestamp: promptMetaData.time,
+                date: promptMetaData.date,
+                user: {
+                  email: userData.email,
+                  RPU: userData.prefs?.RPU,
+                  MRPU: userData.prefs?.MRPU,
+                },
+                prompt: {
+                  text: input,
+                },
+                response:
+                  [{
+                    id: responseMetaData.responseId,
+                    timestamp: responseMetaData.time,
+                    content: await command_response_limitWarning(),
+                  }]
+              }
+            );
+            setInput(""); // Clear the input after adding the entry
+            setIsLoading(false);
+            return;
+          } else if (res === true) {
+            runForecastCoin(input.slice('atm forecast'.length).trim()).then((res) => {
+              const responseMetaData = getMetaData(); // Get new timestamp for response
+              addEntry(
+                {
+                  id: promptMetaData.promptId,
+                  timestamp: promptMetaData.time,
+                  date: promptMetaData.date,
+                  user: {
+                    email: userData.email,
+                    RPU: userData.prefs?.RPU,
+                    MRPU: userData.prefs?.MRPU,
+                  },
+                  prompt: {
+                    text: input,
+                  },
+                  response:
+                    [{
+                      id: responseMetaData.responseId,
+                      timestamp: responseMetaData.time,
+                      content: command_response_atm_forecast_coin(res),
+                    }]
+                }
+              );
+            }, (err) => {
+              console.error(err);
+            }).finally(() => {
+              setInput(""); // Clear the input after adding the entry
+              setIsLoading(false);
+              return;
+            });
+          }
+        });
+    }
   }
 
   useEffect(() => {
@@ -593,7 +668,17 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
         ref={ref}
         type="text"
         value={input}
-        onChange={(e) => setInput(e.target.value)}
+        onChange={(e) => {
+          const value = e.target.value;
+
+          if (value.toLowerCase().startsWith('atm forecast')) {
+            const prefix = 'atm forecast';
+            const rest = value.slice(prefix.length); // everything after prefix
+            setInput(`${prefix}${rest.toUpperCase()}`);
+          } else {
+            setInput(value);
+          }
+        }}
         onKeyDown={handleKeyDown}
         className="bg-transparent border-none outline-none text-green-200 font-mono w-full"
         autoFocus
