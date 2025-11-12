@@ -11,7 +11,7 @@ import {
   command_response_atm_predict_bears,
   command_response_atm_best_long,
   command_response_atm_best_short,
-  command_response_atm_forecast_coin
+  command_response_atm_forecast_coin,
 } from "../../commands";
 import { useNavigate } from "react-router";
 import { logout } from "../../apis/backend/auth/logout";
@@ -35,7 +35,6 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
   const { setLoginStep } = useLogin();
   const [input, setInput] = useState<string>("");
   const { addEntry, setHistory } = useHistory();
-
   const navigate = useNavigate();
 
   // Helper function to get metadata with a fresh timestamp

@@ -60,9 +60,10 @@ export default function command_response_atm_forecast_coin(forecast: Forecast): 
     } = forecast;
 
     const header = `
-╔══════════════════════════════════════════╗
-║  ${trade_type.toUpperCase()} TRADE RECOMMENDATION — ${new Date(meta.timestamp_utc).toISOString().split('T')[0]}  ║
-╚══════════════════════════════════════════╝`;
+╔═════════════════════════════════════╗
+║  TRADE RECOMMENDATION — ${new Date(meta.timestamp_utc).toISOString().split('T')[0]}  ║
+╚═════════════════════════════════════╝
+`;
 
     /* ───────────────────────────────
        1️⃣ MAIN OVERVIEW TABLE
