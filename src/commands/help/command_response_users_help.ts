@@ -15,6 +15,7 @@ function command_response_users_help() {
             [RESOURCES]
              atm guide       - Learn how to use automission.ai system.
              atm whitepaper  - Learn more about this project.
+             atm feedback    - Share your thoughts or report issues to help us improve your experience.
 
             [PREDICTIONS]
              atm predict insights  - Access high-level crypto market overviews with future forecasts [Costs 5 RPU].  

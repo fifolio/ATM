@@ -10,3 +10,5 @@ export { default as command_response_atm_predict_bears } from './predictions/mar
 export { default as command_response_atm_best_long } from './signals/bestLong/command_response_atm_best_long';
 export { default as command_response_atm_best_short } from './signals/bestShort/command_response_atm_best_short';
 export { default as command_response_atm_forecast_coin } from './forecasts/command_response_atm_forecast_coin';
+export { default as command_response_feedback } from './feedback/command_response_feedblack';
+
