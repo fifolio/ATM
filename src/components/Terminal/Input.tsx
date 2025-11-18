@@ -100,7 +100,7 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
     }
 
     if (input.trim() === 'atm whitepaper') {
-      window.open('https://drive.google.com/file/d/1XqUFw0Z0oarDEpU_GeYxhWjilZQsCMgN/view', '_blank');
+      window.open('https://docs.google.com/document/d/18UJ4jD0HPZ9fL04r5NJLiN5HaenfKsuk_ENVFpOY63o/', '_blank');
       setInput(""); // Clear the input after adding the entry
       return;
     }

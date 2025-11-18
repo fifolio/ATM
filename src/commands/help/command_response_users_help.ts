@@ -13,7 +13,6 @@ function command_response_users_help() {
              atm details  - Display your account details.
 
             [RESOURCES]
-             atm guide       - Learn how to use automission.ai system.
              atm whitepaper  - Learn more about this project.
              atm feedback    - Share your thoughts or report issues to help us improve your experience.
 
