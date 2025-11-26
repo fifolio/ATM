@@ -30,7 +30,7 @@ export interface Forecast {
     confidence_score: number;
     signal_strength: string;
     reasoning_summary: string;
-    detailed_rationale: string[];
+    detailed_rationale: string;
     red_flags: string[];
     assumptions: string[];
     recommendations: Recommendations;
@@ -119,7 +119,7 @@ export default function command_response_atm_forecast_coin(forecast: Forecast): 
         wordWrap: true,
         colWidths: [140],
     });
-    detailed_rationale.forEach((item, i) => rationaleTable.push([`${i + 1}. ${item}`]));
+    rationaleTable.push([detailed_rationale]);
 
     /* ───────────────────────────────
        5️⃣ RED FLAGS / RISKS
