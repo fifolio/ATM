@@ -10,7 +10,7 @@ export default function Header() {
             <p>Welcome to Automission.ai (ATM) CLI v{import.meta.env.VITE_VERSION_FULL}</p>
             <p>AI-powered cryptocurrency price movement prediction system.</p>
             {displayHelpContext && (
-                <p>Type 'atm help' for commands, 'atm whitepaper' for project info.</p>
+                <p>Type <span className="text-green-400">atm help</span> for commands, <span className="text-green-400">atm whitepaper</span> for project info.</p>
             )}
         </div>
     )
