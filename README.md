@@ -1,2 +1,5 @@
-# ATMxAlgo
-Private repository for proprietary logic and algorithms used across automission.ai (ATM) projects. This repository is deployed and accessible throughout Vercel.
+🚧 **Work in Progress**  
+
+Automission (ATM) is currently under development. Cloning or using it in its current state **may cause errors** or unexpected behavior.  
+
+Full documentation will be added when the stable version is released.
