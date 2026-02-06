@@ -9,7 +9,7 @@ import areRPUandMRPUEqual from "./apis/backend/userPrefs/areRPUandMRPUEqual";
 
 export default function App() {
 
-  document.title = `Automission.ai (ATM) CLI v${import.meta.env.VITE_VERSION_MAJOR}`
+  document.title = `Automission (ATM) CLI v${import.meta.env.VITE_VERSION_MAJOR}`
 
   const { setIsLoggedin, setUserId } = useUser();
   const { setUserData, updateUserData } = useUserData();

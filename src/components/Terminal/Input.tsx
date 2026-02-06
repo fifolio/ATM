@@ -219,7 +219,8 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
 
     if (input.trim() === 'atm signup') {
       if (userData !== null) return;
-
+      
+      setHistory([]);
       setSignupStep(0);
       setInput(""); // Clear the input after
       return;
@@ -227,7 +228,8 @@ const Input = forwardRef<HTMLInputElement>((_, ref) => {
 
     if (input.trim() === 'atm login') {
       if (userData !== null) return;
-
+      
+      setHistory([]);
       setLoginStep(0);
       setInput(""); // Clear the input after
       return;

@@ -7,7 +7,7 @@ export default function Footer() {
                 Press <span className="text-white">Ctrl+C</span> to interrupt • Type <span className="text-white">'atm help'</span> for commands
             </div> */}
             <div className="m-0 p-0 hidden md:flex !text-sm items-center">
-                Type <span className="text-white mx-2 !text-sm">'atm help'</span> for commands.
+                Type <span className="text-white mx-2 !text-sm">atm help</span> for commands.
             </div>
             <div className="!text-sm flex items-center justify-center">
                 &copy; {new Date().getFullYear()} ATM
@@ -17,7 +17,7 @@ export default function Footer() {
                 </a>
             </div>
             <div>
-                <div className="!text-sm">Automission.ai can make mistakes.</div>
+                <div className="!text-sm">Automission can make mistakes.</div>
             </div>
         </div>
     )
