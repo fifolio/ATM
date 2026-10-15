@@ -34,12 +34,12 @@ Architecturally, ATM is implemented as a React 19 + TypeScript + Vite single-pag
 15. [State Management and Client-Side Architecture](#15-state-management-and-client-side-architecture)
 16. [Security, Rate Limiting, and Error Handling](#16-security-rate-limiting-and-error-handling)
 17. [Deployment and Operational Characteristics](#17-deployment-and-operational-characteristics)
-18. [User Journeys (with Screenshot)](#18-user-journeys-with-screenshot-placeholders)
+18. [User Journeys](#18-user-journeys)
 19. [Command Reference with Example Outputs and Explanations](#19-command-reference-with-example-outputs-and-explanations)
 20. [Quantitative Considerations and Performance Vectors](#20-quantitative-considerations-and-performance-vectors)
 21. [Limitations, Assumptions, and Future Work](#21-limitations-assumptions-and-future-work)
 22. [Conclusion](#22-conclusion)
-23. [Diagram Placeholders (with Generation Prompts)](#23-diagram-placeholders-with-generation-prompts)
+23. [Illustration Diagrams](#23-illustration-diagrams)
 24. [References and Acknowledgments](#24-references-and-acknowledgments)
 
 ---
@@ -81,7 +81,7 @@ These principles collectively aim to elevate the system beyond a simple chatbot 
 
 ## 3. System Architecture
 
-![enter image description here](https://raw.githubusercontent.com/fifolio/automission/refs/heads/main/public/AI%20Crypto%20Prediction%20System%20Architecture.png?token=GHSAT0AAAAAAEIZ3HNXQHSAWXR6SE2BYXNW2WP3TVQ)
+![enter image description here](https://www.image2url.com/r2/default/images/1792083124864-407405b0-9c1b-43df-aca2-3f90414b2ace.png)
 
 The architecture follows a classic three-tier pattern adapted for a modern SPA:
 
@@ -647,12 +647,14 @@ This modular store design prevents unnecessary re-renders and keeps the terminal
 > **Multi-Predections Output**  
 > *Description:* Multi-table forecasts.
 > ![enter image description here](https://www.image2url.com/r2/default/images/1792082226227-40ea50d9-4e55-4c70-8a9f-263c693bbe17.png)
-![enter image description here](https://www.image2url.com/r2/default/images/1792082374579-e22291e2-711e-40f4-b2f5-2e1282586e0d.png)
+> 
+> ![enter image description here](https://www.image2url.com/r2/default/images/1792082374579-e22291e2-711e-40f4-b2f5-2e1282586e0d.png)
 
 > **Best Short Signal**  
 > *Description:* Example of the best-short recommendation table plus the follow-up forecast tip.
-![enter image description here](https://www.image2url.com/r2/default/images/1792082633291-9721fb80-4d76-411c-97f1-338f8c934002.png)
-![enter image description here](https://www.image2url.com/r2/default/images/1792082722858-27ffc6de-69f4-453f-a35d-bc58e82cc2a9.png)
+> ![enter image description here](https://www.image2url.com/r2/default/images/1792082633291-9721fb80-4d76-411c-97f1-338f8c934002.png)
+> 
+> ![enter image description here](https://www.image2url.com/r2/default/images/1792082722858-27ffc6de-69f4-453f-a35d-bc58e82cc2a9.png)
 
 ---
 
@@ -755,7 +757,7 @@ The architecture is modular, the code is typed, the outputs are transparent, and
 
 ---
 
-## 23. Diagrams
+## 23. Illustration Diagrams
 
 > **Forecast Pipeline Sequence**  
 ![enter image description here](https://www.image2url.com/r2/default/images/1792079494779-2db7e7a6-b225-4dd0-acd8-483b00eb2130.jpeg)
